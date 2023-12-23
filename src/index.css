@@ -1,0 +1,25 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;400;500;700&family=Montserrat:wght@500;600;700&family=Roboto:ital,wght@0,400;1,300&family=Work+Sans:wght@300&display=swap');
+
+/* @import "antd/dist/antd.min.css"; */
+
+body {
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  font-family: 'Inconsolata', monospace;
+  font-family: 'Montserrat', sans-serif;
+  font-family: 'Roboto', sans-serif;
+  font-family: 'Work Sans', sans-serif;
+}
+
+
+html {
+  font-family: 'Inconsolata', monospace;
+  font-family: 'Montserrat', sans-serif;
+  font-family: 'Roboto', sans-serif;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 62.5%;
+}

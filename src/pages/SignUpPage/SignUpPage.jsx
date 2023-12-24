@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style'
+import { WrapperContainerLeft, WrapperContainerRight, WrapperTextLight, WrapperDivContainer } from './style'
 import { InputForm } from '../../component/InputForm/InputForm'
 import { ButtonComponent } from '../../component/ButtonComponent/ButtonComponent'
 import { Image } from 'antd'
@@ -54,7 +54,7 @@ export const SignUpPage = () => {
         })
     }
     return (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "#ccc", height: '100vh' }}>
+        <WrapperDivContainer >
             <div style={{ width: "800px", height: "445px", borderRadius: "6px", background: "#fff", display: 'flex', }}>
                 <WrapperContainerLeft>
                     <div style={{ fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -112,10 +112,10 @@ export const SignUpPage = () => {
                         <WrapperTextLight style={{ cursor: 'pointer' }} onClick={handleNavigateLogin}>Đăng nhập</WrapperTextLight>
                     </p>
                 </WrapperContainerLeft>
-                <WrapperContainerRight>
+                <WrapperContainerRight className='image-signup'>
                     <Image src={logo} preview={false} alt='image-logo' height={'100%'} width={"100%"} />
                 </WrapperContainerRight>
             </div >
-        </div>
+        </WrapperDivContainer>
     )
 }

@@ -22,3 +22,16 @@ export const WrapperTextLight = styled.span`
     cursor:pointer;
     // font-weight:bold;
 `
+export const WrapperDivContainer = styled.div`
+    display: flex;
+     align-items: center;
+      justify-content: center;
+       background-color: #ccc;
+        height: 100vh;
+
+    @media(max-width:768px){
+        .image-login{
+            display:none;
+        }
+    }
+`

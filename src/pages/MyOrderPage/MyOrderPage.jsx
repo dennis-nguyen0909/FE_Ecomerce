@@ -14,7 +14,8 @@ export const MyOrderPage = () => {
     const navigate = useNavigate();
     const fetchDetailOrder = async () => {
         const res = await OrderService.getAllOrderbyIdUser(user?.id, user?.access_token);
-        return res?.response?.data
+        console.log('fec', res?.data)
+        return res?.data
     }
     const queryOrder = useQuery({ queryKey: ['orders'], queryFn: fetchDetailOrder, enabled: user?.id && user?.access_token ? true : false },)
     const { isLoading, data } = queryOrder
@@ -33,7 +34,6 @@ export const MyOrderPage = () => {
     }
     const handleNavigatePageOrderDetails = (id) => {
         navigate(`/my-order-detail/${id}`)
-        // console.log(id)
     }
     const renderMyOrder = (data) => {
         return data?.map((order) => {

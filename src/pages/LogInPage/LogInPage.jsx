@@ -43,7 +43,7 @@ export const LogInPage = () => {
         } else if (data?.message?.EC === 1) {
             const access_token = data.message?.access_token
             localStorage.setItem("access_token", JSON.stringify(data.message?.access_token))
-            localStorage.setItem("refresh_token", JSON.stringify(data.message?.access_token))
+            localStorage.setItem("refresh_token", JSON.stringify(data?.refresh_token))
             if (data.message?.access_token) {
                 const decoded = jwtDecode(data.message?.access_token) // jwt sẽ giải mã token và trả về payload gồm dữ liệu đã giải
                 if (decoded?.id) {

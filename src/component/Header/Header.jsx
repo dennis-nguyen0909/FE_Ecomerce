@@ -188,7 +188,7 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             </WrapperHeader>
             <WrapperHeaderMobile className='header-mobile'>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #ccc', margin: '10px 10px', paddingBottom: '10px', gap: '10px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>
                         <Button>Menu</Button>
                         <SearchOutlined style={{ fontSize: '20px' }} onClick={showDrawerSearch} />
                     </div>

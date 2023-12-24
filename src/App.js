@@ -45,7 +45,7 @@ function App() {
     const decodedRefreshToken = jwtDecode(refreshToken)
     if (decoded?.exp < currentTime.getTime() / 1000) {
       //nếu mà rf còn hạn thì mới gọi đến refrshToken
-      if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
+      if (decodedRefreshToken?.exp < currentTime.getTime() / 1000) {
         const data = await UserService.refreshToken(refreshToken);
         // nếu time token bé hơn time hiện tại / 1000 lấy ra milisecond giây
         config.headers['token'] = `Bearer ${data?.access_token}`

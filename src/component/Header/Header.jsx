@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Badge, Popover, Button, message } from 'antd'
-import { WrapperHeader, WrapperIcon, WrapperLogoHeader, WrapperLogout } from './style'
+import { WrapperHeader, WrapperIcon, WrapperLogoHeader, WrapperLogout, WrapperDiv, WrapperDivMenu, WrapperHeaderMobile } from './style'
 import { UserOutlined, ShoppingCartOutlined, DribbbleOutlined, SearchOutlined } from '@ant-design/icons'
 import { WrapperAccount } from './style'
 import { ButtonInputSearch } from '../ButtonInputSearch/ButtonInputSearch'
@@ -132,23 +132,20 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
 
     }
     return (
-        <div style={{ width: '100%' }}>
+        <WrapperDiv>
             <div style={{ backgroundColor: 'black', height: '30px', display: 'flex', alignItems: 'center', paddingLeft: '40px' }}>
                 <DribbbleOutlined style={{ color: '#fff', }} />
             </div>
-            <WrapperHeader>
-                {/* <WrapperLogoHeader>
-                    Sneaker Asia
-                </WrapperLogoHeader> */}
+            <WrapperHeader className='header'>
                 <Col onClick={() => navigate('/')} span={10}>
-                    <WrapperLogoHeader>
+                    <WrapperLogoHeader className='logo-header'>
                         Sneaker Asia
                     </WrapperLogoHeader>
                 </Col>
-                <Col span={5} style={{ position: 'absolute', right: '50px', display: 'flex', gap: '54px', alignItems: 'center' }}>
+                <Col className='nav' span={5} style={{ position: 'absolute', right: '50px', display: 'flex', gap: '54px', alignItems: 'center' }}>
                     <LoadingComponent isLoading={loading}>
-                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px' }}>
-                            <WrapperIcon>
+                        <WrapperDivMenu >
+                            <WrapperIcon className='hidden-on-mobile'>
                                 {!isHiddenSearch && <SearchOutlined style={{ fontSize: '20px' }} onClick={showDrawerSearch} />}
                             </WrapperIcon>
                             <WrapperAccount className='hidden-on-mobile'>
@@ -184,10 +181,47 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                     )}
                                 </div>
                             </WrapperAccount>
-                        </div>
+                        </WrapperDivMenu>
                     </LoadingComponent>
                 </Col>
+
             </WrapperHeader>
+            <WrapperHeaderMobile className='header-mobile'>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #ccc', margin: '10px 10px', paddingBottom: '10px', gap: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Button>Menu</Button>
+                        <SearchOutlined style={{ fontSize: '20px' }} onClick={showDrawerSearch} />
+                    </div>
+                    <div style={{ backgroundColor: 'black', color: '#fff', height: '30px', width: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', cursor: 'pointer' }}>
+                        <p onClick={() => navigate('/')}>Sneaker Asia</p>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        {user?.access_token ?
+                            <>
+                                <Popover content={content} trigger="click">
+                                    <UserOutlined style={{ cursor: 'pointer', fontSize: "20px" }} />
+                                </Popover>
+                            </>
+                            :
+                            <div>
+                                <UserOutlined onClick={handleNavigateLogin} style={{ cursor: 'pointer', fontSize: "20px" }} />
+                            </div>
+
+                        }
+
+                        {!isHiddenCart && (
+                            <>
+                                <WrapperIcon>
+                                    <Badge count={order?.orderItems?.length} size='small' >
+                                        <ShoppingCartOutlined style={{ fontSize: "20px" }} onClick={showDrawerCart} />
+                                    </Badge>
+                                </WrapperIcon>
+                                {/* <WrapperTextSmall>Giỏ Hàng</WrapperTextSmall> */}
+                            </>
+                        )}
+                    </div>
+                </div>
+            </WrapperHeaderMobile>
             <DrawerComponent
 
                 title="Sneaker Asia"
@@ -294,6 +328,6 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                     </ButtonComponent>
                 </div>
             </Drawer>
-        </div>
+        </WrapperDiv>
     )
 }

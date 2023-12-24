@@ -1,5 +1,5 @@
 
-import { Image, Row } from 'antd'
+import { Col, Image, Row } from 'antd'
 import styled from 'styled-components'
 export const WrapperHeader = styled(Row)`
     border-bottom:1px solid #ccc;
@@ -33,20 +33,10 @@ export const WrapperLogoHeader = styled.div`
     justify-content: center;
     font-weight: bold; 
     font-size: 18px; 
-    @media (max-width: 800px) {
-          width: 100%; /* Adjust the width as needed */
-          margin-left:0px;
-          max-width:none;
-          .hidden-on-mobile {
-            display: none;
-          }
-        
-    }
     @media (max-width: 768px) {
-        .hidden-on-mobile {
-          display: none;
-        }
-      }
+          width: 200px; 
+          margin-left:0px;
+    }
     
 `
 export const WrapperAccount = styled.div`
@@ -84,4 +74,45 @@ export const WrapperIcon = styled.div`
     &:hover{
         transform:scale(1.2);
     }
+`
+export const WrapperDiv = styled.div`
+  .width: 100%; 
+.header {
+    @media (max-width: 767px) {
+        display: none; /* Ẩn khi màn hình nhỏ hơn hoặc bằng 767px */
+    }
+}
+.header-mobile {
+    @media (min-width: 767px) {
+        display: none; /* Hiển thị khi màn hình nhỏ hơn hoặc bằng 767px */
+    }
+    @media(max-width:767px){
+        display:block;
+    }
+}
+`;
+export const WrapperHeaderMobile = styled.div`
+    display:none;
+`
+// Sử dụng WrapperDiv trong component của bạn
+
+
+// Sử dụng WrapperDiv trong component của bạn
+
+export const WrapperDivMenu = styled.div`
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    @media (max-width: 768px) {
+        .hidden-on-mobile {
+          display: none;
+        }
+        .logo-header{
+            padding:10px 20px;
+        }
+      }
+    
+
 `

@@ -64,3 +64,15 @@ export const WrapperDivTextHover = styled.div`
         cursor: pointer;
     }
 `;
+
+export const WrapperDivNav = styled.div`
+    display: flex;
+     align-items: center
+     justify-content: space-around;
+    margin: 14px 0;
+    @media (max-width:767px){
+      
+            display:none;
+        
+    }
+`

@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { Col, Card } from "antd"
+import { Col, Card, Row } from "antd"
 
 export const WrapperProduct = styled(Col)`
     display:flex;
@@ -15,6 +15,7 @@ export const WrapperNavbar = styled(Col)`
     border-radius: 6px; 
     height:fit-content;
     margin-top:20px;
+   
 `
 export const WrapperCardStyleProductPage = styled(Card)`
     width:400px;
@@ -27,4 +28,18 @@ export const WrapperCardStyleProductPage = styled(Card)`
     // &:hover{
     //     display:none;
     // }
+`
+export const WrapperRow = styled(Row)`
+flex-wrap:nowrap;
+padding-top:10px;
+@media (max-width: 767px){
+        
+    .navBarLeft{
+        display:none;
+    }
+    .navBarProduct{
+        display:none;
+    }
+  
+}
 `

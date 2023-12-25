@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
 import { NavbarComponent } from '../../component/NavbarComponent/NavbarComponent'
-import { Button, Pagination, Row } from 'antd'
-import { WrapperNavbar, WrapperProduct } from './style'
-import { useLocation } from 'react-router-dom'
+import { Button, Card, Pagination, Row } from 'antd'
+import { WrapperNavbar, WrapperProduct, WrapperRow } from './style'
+import { useLocation, useNavigate } from 'react-router-dom'
 import * as ProductService from '../../services/ProductService'
 import { useEffect } from 'react'
 import { CardComponentPageTypeProduct } from '../../component/CardComponentPageTypeProduct/CardComponent'
+import Meta from 'antd/es/card/Meta'
+import { StyleNameProduct, WrapperPriceText } from '../../component/CardComponentPageTypeProduct/style'
+import { covertPrice } from '../../untils'
 export const TypeProductPage = () => {
     const [stateProductType, setStateProductType] = useState([])
     const [type, setType] = useState([])
+    const navigate = useNavigate()
     const [panigate, setPanigate] = useState({
         pageCurrent: 0,
         page: 0,
@@ -57,13 +61,16 @@ export const TypeProductPage = () => {
             total: panigate?.total
         })
     }
+    const handleDetailProduct = (id) => {
+        navigate(`/product-detail/${id}`)
+    }
     return (
         <div style={{ padding: '0 40px', background: '#efefef' }}>
-            <Row style={{ flexWrap: 'nowrap', paddingTop: '10px' }}>
-                <WrapperNavbar span={4}>
+            <WrapperRow>
+                <WrapperNavbar style={{}} className='navBarLeft' span={4}>
                     <NavbarComponent types={type} />
                 </WrapperNavbar>
-                <WrapperProduct span={20}>
+                <WrapperProduct className='navBarProduct' span={20}>
                     {stateProductType?.data?.map((product) => {
                         return (
                             <CardComponentPageTypeProduct
@@ -78,12 +85,33 @@ export const TypeProductPage = () => {
                                 type={product.type}
                                 discount={product.discount}
                                 selled={product.selled}
+
                             />
                         )
                     })}
-
                 </WrapperProduct>
-            </Row>
+                <WrapperProduct className='navbarMobile' span={20}>
+                    {stateProductType?.data?.map((product) => {
+                        console.log(product)
+                        return (
+                            <Card
+                                onClick={() => handleDetailProduct(product?._id)}
+                                size='small'
+                                hoverable={true}
+                                style={{ width: 105 }}
+                                cover={<img alt="example" src={product?.image} />}
+                            >
+                                <p style={{ fontSize: '10px' }}>{product?.name}</p>
+
+                                <span style={{ marginRight: '10px', fontSize: '10px' }}>
+                                    {covertPrice(product.price)}
+                                </span>
+
+                            </Card>
+                        )
+                    })}
+                </WrapperProduct>
+            </WrapperRow>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 {panigate?.pageCurrent !== panigate?.total && <Button onClick={handleEndPage}>Cuối Trang </Button>}
                 <Pagination showQuickJumper={panigate?.pageCurrent === panigate?.total ? false : true} pageSize={panigate?.limit} current={panigate.pageCurrent} total={panigate?.total + 10} onChange={onChange} disabled={panigate?.pageCurrent === panigate?.total} />

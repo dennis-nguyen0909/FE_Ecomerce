@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Col, Badge, Popover, Button, message } from 'antd'
+import { Row, Col, Badge, Popover, Button, message, Menu, Dropdown, Switch, } from 'antd'
 import { WrapperHeader, WrapperIcon, WrapperLogoHeader, WrapperLogout, WrapperDiv, WrapperDivMenu, WrapperHeaderMobile } from './style'
-import { UserOutlined, ShoppingCartOutlined, DribbbleOutlined, SearchOutlined } from '@ant-design/icons'
+import { UserOutlined, ShoppingCartOutlined, DribbbleOutlined, SearchOutlined, MenuOutlined, AppstoreOutlined, RightOutlined, SettingOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { WrapperAccount } from './style'
 import { ButtonInputSearch } from '../ButtonInputSearch/ButtonInputSearch'
 import * as UserService from '../../services/UserService'
@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
-
+import * as ProductService from '../../services/ProductService'
 import { resetUser } from '../../redux/slides/userSlide'
 import { searchProduct } from '../../redux/slides/productSlide'
 import LoadingComponent from '../LoadingComponent/LoadingComponent'
@@ -20,17 +20,32 @@ import { ButtonComponent } from '../ButtonComponent/ButtonComponent'
 import { WrapperButtonQuality, WrapperQualityProduct } from '../ProductDetailsComponent/style'
 import { decreaseAmount, increaseAmount, removeOrderProduct } from '../../redux/slides/orderSlide'
 import { covertPrice } from '../../untils'
+import { TypeProduct } from '../TypeProduct/TypeProduct'
 // import slider4 from '../../assets/images/slider4.jpg'
 export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const location = useLocation()
     const order = useSelector((state) => state.order)
     const [openSearch, setOpenSearch] = useState(false);
     const [openCart, setOpenCart] = useState(false);
+    const [openMenu, setOpenMenu] = useState(false);
     const [placement, setPlacement] = useState('left');
     const [search, setSearch] = useState('')
+    const [typeProduct, setTypeProduct] = useState([])
+    const [current, setCurrent] = useState('1');
+    const [theme, setTheme] = useState('light');
+    const changeTheme = (value) => {
+        setTheme(value ? 'dark' : 'light');
+    };
+    const onClick = (e) => {
+        console.log('click ', e);
+        setCurrent(e.key);
+    };
     const showDrawerSearch = () => {
         setOpenSearch(true);
     };
+    const showDrawerMenu = () => {
+        setOpenMenu(true);
+    }
     const onCloseSearch = () => {
         setOpenSearch(false);
     };
@@ -43,6 +58,10 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const onCloseCart = () => {
         setOpenCart(false);
     };
+    const onCloseMenu = () => {
+        setOpenMenu(false);
+    }
+
     const onChangeCart = (e) => {
         setPlacement(e.target.value);
     };
@@ -89,6 +108,35 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             )}
         </div>
     );
+    function getItem(label, key, icon, children, type) {
+        return {
+            key,
+            icon,
+            children,
+            label,
+            type,
+        };
+    }
+    const generateProductMenuItems = () => {
+        return typeProduct.map((type, index) => (
+            <Menu.Item key={`product${index + 1}`}>{type}</Menu.Item>
+        ));
+    };
+
+    const items = [
+        getItem('Shop', 'shop', []),
+        // getItem('Navigation Two', 'sub2', <AppstoreOutlined />, [
+        //     getItem('Option 5', '5'),
+        //     getItem('Option 6', '6'),
+        //     getItem('Submenu', 'sub3', null, [getItem('Option 7', '7'), getItem('Option 8', '8')]),
+        // ]),
+        getItem('Navigation Three', 'sub4', <SettingOutlined />, [
+            getItem('Option 9', '9'),
+            getItem('Option 10', '10'),
+            getItem('Option 11', '11'),
+            getItem('Option 12', '12'),
+        ]),
+    ];
     const onSearch = (e) => {
         setSearch(e.target.value)
 
@@ -131,6 +179,24 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         }
 
     }
+
+    const fetchTypeProduct = async () => {
+        const res = await ProductService.getAllTypeProduct();
+        if (res?.status === 'Ok') {
+            setTypeProduct(res?.data);
+        }
+    }
+    useEffect(() => {
+        fetchTypeProduct();
+    }, [])
+
+    const handleNavigateTypeMenu = () => {
+        setOpenCart(true)
+    }
+    const handleOnClickMenu = (e) => {
+        setOpenMenu(false)
+    }
+
     return (
         <WrapperDiv>
             <div style={{ backgroundColor: 'black', height: '30px', display: 'flex', alignItems: 'center', paddingLeft: '40px' }}>
@@ -188,8 +254,8 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             </WrapperHeader>
             <WrapperHeaderMobile className='header-mobile'>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #ccc', margin: '10px 10px', paddingBottom: '10px', gap: '10px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>
-                        <Button>Menu</Button>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px', gap: '10px' }}>
+                        <MenuOutlined onClick={showDrawerMenu} style={{ cursor: 'pointer' }} />
                         <SearchOutlined style={{ fontSize: '20px' }} onClick={showDrawerSearch} />
                     </div>
                     <div style={{ backgroundColor: 'black', color: '#fff', height: '30px', width: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', cursor: 'pointer' }}>
@@ -326,6 +392,55 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                         styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
                     >
                     </ButtonComponent>
+                </div>
+            </Drawer>
+
+            <Drawer
+
+                placement={"left"}
+                closable={false}
+                onClose={onCloseMenu}
+                open={openMenu}
+                key={placement}
+                width={'600px'}
+            >
+                <div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #ccc' }}>
+                        <h3>Sneaker Asia</h3>
+                        <Button onClick={onCloseMenu}>X</Button>
+                    </div>
+                    <div>
+                        <div onClick={() => handleNavigateTypeMenu} style={{ display: 'flex', justifyContent: 'space-between', cursor: 'pointer' }}>
+                            <p>Shop</p>
+                            <ArrowRightOutlined />
+                        </div>
+                    </div>
+                    <>
+                        <Menu mode="inline" onClick={handleOnClickMenu} >
+                            <Menu.SubMenu key="products" title="Sản phẩm">
+                                {typeProduct.map((item, index) => {
+                                    return (
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <Menu.Item key={`product-${index}`} icon={<RightOutlined />}  >
+                                                <TypeProduct name={item} />
+                                            </Menu.Item>
+                                        </div>
+                                    )
+                                })}
+                            </Menu.SubMenu>
+                            <Menu.Item key="sales" >
+                                Giảm giá
+                            </Menu.Item>
+                            <Menu.Item key="chamsoc" >
+                                Chăm sóc khách hàng
+                            </Menu.Item>
+                            <Menu.Item key="collection" >
+                                Bộ sưu tập
+                            </Menu.Item>
+                        </Menu>
+
+                    </>
                 </div>
             </Drawer>
         </WrapperDiv>

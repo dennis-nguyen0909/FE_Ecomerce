@@ -9,11 +9,11 @@ export const CardComponentPageTypeProduct = (props) => {
     const handleDetailProduct = (id) => {
         navigate(`/product-detail/${id}`)
     }
-    // const formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     return (
         <WrapperCardStyle
+            // style={{ width: '100px', height: '100px' }}
             hoverable={true}
-            headStyle={{ width: "100px", height: "100px" }}
+            headStyle={{ width: "100px", height: "50px" }}
             bodyStyle={{ padding: "10px" }}
             cover={<img alt="example" src={image} />}
             onClick={() => handleDetailProduct(id)}

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { TypeProduct } from '../../component/TypeProduct/TypeProduct'
-import { WrapperButtonMore, WrapperDivTextHover, WrapperProduct, WrapperTypeProduct } from './style'
+import { WrapperButtonMore, WrapperDivNav, WrapperDivTextHover, WrapperProduct, WrapperTypeProduct } from './style'
 import { SliderComponent } from '../../component/SliderComponent/SliderComponent'
 import slider1 from '../../assets/images/slider1.jpg'
 import slider2 from '../../assets/images/slider2.jpg'
@@ -58,7 +58,7 @@ export const HomePage = () => {
     }, [])
     return (
         <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', margin: '14px 0' }}>
+            <WrapperDivNav className='navBar'>
                 <div>
                     <Dropdown overlay={menuTypeProducts} placement="bottom">
                         <WrapperDivTextHover style={{ cursor: 'pointer' }}>
@@ -79,8 +79,7 @@ export const HomePage = () => {
 
                     <WrapperDivTextHover>Bộ sưu tập</WrapperDivTextHover>
                 </div>
-
-            </div >
+            </WrapperDivNav >
             <div className='body' style={{ width: '100%', backgroundColor: "#fff" }}>
 
                 <div id="container" style={{ height: 'fit-content' }}>

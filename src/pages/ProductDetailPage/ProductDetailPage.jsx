@@ -2,6 +2,7 @@ import React from 'react'
 import { ProductDetailsComponent } from '../../component/ProductDetailsComponent/ProductDetailsComponent'
 import { Flex } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
+import { WrapperDiv } from './style'
 
 export const ProductDetailPage = () => {
     // use usePrams get IdProduct on URL
@@ -9,12 +10,12 @@ export const ProductDetailPage = () => {
     const navigate = useNavigate()
 
     return (
-        <div style={{ padding: '0 120px', height: 'fit-content' }}>
-            <h4>
+        <WrapperDiv>
+            <h4 className='heading'>
                 <span style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>Trang chủ  </span >
                 Chi tiết sản phẩm
             </h4>
             <ProductDetailsComponent idProduct={idProduct.id} />
-        </div>
+        </WrapperDiv>
     )
 }

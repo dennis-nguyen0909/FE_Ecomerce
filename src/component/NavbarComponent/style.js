@@ -8,8 +8,8 @@ export const WrapperLabelText = styled.h1`
 export const WrapperTextValue = styled.span`
     color:rgb(56,56,61);
     font-size:18px;
-    font-weight:400;
-    border:1px solod #ccc;
+    padding:10px 0;
+    border-bottom:1px solid #ccc;
 `
 export const WrapperContent = styled.span`
     display:flex;

@@ -238,9 +238,7 @@ export const ProductDetailsComponent = ({ idProduct }) => {
                             <p>{productDetail?.size.map((item) => {
                                 return (
                                     <>
-
                                         <Button key={item} style={{
-
                                             padding: '0 10px', margin: '10px 10px',
                                             // backgroundColor: selectedSize == item ? "red" : '#fff',
                                             border: selectedSize == item ? "2px solid black" : "1px solid #ccc"

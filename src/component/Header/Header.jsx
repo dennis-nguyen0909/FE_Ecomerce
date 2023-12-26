@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Badge, Popover, Button, message, Menu, Dropdown, Switch, } from 'antd'
-import { WrapperHeader, WrapperIcon, WrapperLogoHeader, WrapperLogout, WrapperDiv, WrapperDivMenu, WrapperHeaderMobile } from './style'
+import { WrapperHeader, WrapperIcon, WrapperLogoHeader, WrapperLogout, WrapperDiv, WrapperDivMenu, WrapperHeaderMobile, WrapperDivProduct } from './style'
 import { UserOutlined, ShoppingCartOutlined, DribbbleOutlined, SearchOutlined, MenuOutlined, AppstoreOutlined, RightOutlined, SettingOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { WrapperAccount } from './style'
 import { ButtonInputSearch } from '../ButtonInputSearch/ButtonInputSearch'
@@ -46,6 +46,7 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const showDrawerMenu = () => {
         setOpenMenu(true);
     }
+
     const onCloseSearch = () => {
         setOpenSearch(false);
     };
@@ -196,6 +197,10 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const handleOnClickMenu = (e) => {
         setOpenMenu(false)
     }
+    const sum = order?.orderItems?.reduce((acc, cur) => {
+        return acc + cur.price * cur.amount;
+    }, 0)
+    console.log(sum)
 
     return (
         <WrapperDiv>
@@ -289,7 +294,6 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 </div>
             </WrapperHeaderMobile>
             <DrawerComponent
-
                 title="Sneaker Asia"
                 placement={"top"}
                 closable={false}
@@ -341,12 +345,13 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 </div>
                 {order?.orderItems?.length ? order?.orderItems?.map((item) => {
                     return (
-                        <div key={item?.product} style={{ width: '500px', height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderTop: '1px solid #ccc', marginBottom: '10px' }}>
+
+                        <WrapperDivProduct className='itemProduct' key={item?.product}>
                             <div>
                                 <img width={'130px'} height={'130px'} objectFit={'cover'} src={item.image} />
                             </div>
                             <div style={{ padding: '0 10px' }}>
-                                <h3>Tên sản phẩm :{item?.name}</h3>
+                                <h3>{item?.name}</h3>
                                 <p>Giá :{covertPrice(item?.price)}</p>
                                 <p>Số lượng : {item?.amount}</p>
                                 <p>Size :{item?.size}</p>
@@ -362,7 +367,7 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                 </WrapperQualityProduct>
                             </div>
                             <div style={{ cursor: 'pointer' }} onClick={() => handleDeleteOrder(item?.product)}>X</div>
-                        </div>
+                        </WrapperDivProduct>
 
                     )
                 }) : (
@@ -374,8 +379,9 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 )}
                 <div style={{ borderTop: '1px  solid #ccc', borderBottom: '1px solid #ccc' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <p>Tạm Tính { }</p>
-                        <p>vnd</p>
+                        <p>Tạm Tính</p>
+                        <p> {covertPrice(sum)}</p>
+
                     </div>
                     <ButtonComponent
                         onClick={handleNavigateOrderPage}
@@ -439,7 +445,6 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                 Bộ sưu tập
                             </Menu.Item>
                         </Menu>
-
                     </>
                 </div>
             </Drawer>

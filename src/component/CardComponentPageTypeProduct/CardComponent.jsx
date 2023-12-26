@@ -5,13 +5,12 @@ import { useNavigate } from 'react-router-dom'
 import { covertPrice } from '../../untils'
 export const CardComponentPageTypeProduct = (props) => {
     const navigate = useNavigate()
-    const { countInStock, description, image, price, name, rating, type, discount, selled, id } = props;
+    const { countInStock, description, image, price, name, rating, type, discount, selled, id, width } = props;
     const handleDetailProduct = (id) => {
         navigate(`/product-detail/${id}`)
     }
     return (
         <WrapperCardStyle
-            // style={{ width: '100px', height: '100px' }}
             hoverable={true}
             headStyle={{ width: "100px", height: "50px" }}
             bodyStyle={{ padding: "10px" }}

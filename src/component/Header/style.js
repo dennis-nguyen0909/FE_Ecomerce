@@ -90,6 +90,14 @@ export const WrapperDiv = styled.div`
         display:block;
     }
 }
+.itemProduct {
+    @media (max-width:767px){
+        display:none;
+    }
+}
+.wrapperProduct{
+    background-color:red'
+}
 `;
 export const WrapperHeaderMobile = styled.div`
     display:none;
@@ -114,5 +122,19 @@ export const WrapperDivMenu = styled.div`
         }
       }
     
+
+`
+export const WrapperDivProduct = styled.div`
+      width:500px;
+      height:200px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-top:1px solid #ccc;
+      margin-bottom:10px;
+      @media (max-width:767px){
+        width:100%;
+        gap:20px;
+      }
 
 `

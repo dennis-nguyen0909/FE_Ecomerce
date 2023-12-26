@@ -19,7 +19,7 @@ export const HomePage = () => {
     // const arr = ['About Us', 'Cửa Hàng', 'Giảm giá', 'Liên hệ', 'Chăm sóc khách hàng']
     const searchProduct = useSelector((state) => state.product?.search)
     const searchDebounce = useDebounce(searchProduct, 1000)
-    const [limit, setLimit] = useState(3)
+    const [limit, setLimit] = useState(9)
     const [typeProduct, setTypeProduct] = useState([])
 
 
@@ -40,7 +40,7 @@ export const HomePage = () => {
     }
     const { data: products, isLoading } = useQuery({ queryKey: ['products', limit, searchDebounce], queryFn: fetchProduct, retryDelay: 1000, retry: 3 })
     const handleLoadMore = () => {
-        setLimit((prev) => prev + 3)
+        setLimit((prev) => prev + 9)
     }
     const handleReset = () => {
         setLimit(3)
@@ -81,7 +81,6 @@ export const HomePage = () => {
                 </div>
             </WrapperDivNav >
             <div className='body' style={{ width: '100%', backgroundColor: "#fff" }}>
-
                 <div id="container" style={{ height: 'fit-content' }}>
                     <SliderComponent arrImages={[slider1, slider2, slider3, slider4]} />
                     <div style={{

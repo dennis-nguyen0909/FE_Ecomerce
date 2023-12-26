@@ -10,7 +10,7 @@ import LoadingComponent from '../../component/LoadingComponent/LoadingComponent'
 export const SearchProduct = () => {
     const productSearch = useSelector((state) => state?.product?.search)
     const searchDebounce = useDebounce(productSearch, 100)
-    const [limit, setLimit] = useState(3)
+    const [limit, setLimit] = useState(9)
     const fetchProduct = async (context) => {
         const limit = context?.queryKey && context?.queryKey[1]
         const search = context?.queryKey && context?.queryKey[2]
@@ -29,7 +29,7 @@ export const SearchProduct = () => {
             </h3>
             <div className='body' style={{ width: '100%', backgroundColor: "#fff" }}>
                 <div id="container" style={{ height: 'fit-content' }}>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px 0', fontSize: '30px', }}>Sản Phẩm Mới</div>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px 0', fontSize: '30px', }}>Sản Phẩm </div>
                     <LoadingComponent isLoading={isLoading}>
                         <WrapperProduct>
                             {products?.data && products?.data?.length > 0 ? (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { NavbarComponent } from '../../component/NavbarComponent/NavbarComponent'
-import { Button, Card, Pagination, Row } from 'antd'
-import { WrapperNavbar, WrapperProduct, WrapperRow } from './style'
+import { Button, Card, Pagination, Row, Space, Select } from 'antd'
+import { WrapperNavbar, WrapperProduct, WrapperRow, WrapperContainer, WrapperSort } from './style'
 import { useLocation, useNavigate } from 'react-router-dom'
 import * as ProductService from '../../services/ProductService'
 import { useEffect } from 'react'
@@ -9,6 +9,7 @@ import { CardComponentPageTypeProduct } from '../../component/CardComponentPageT
 import Meta from 'antd/es/card/Meta'
 import { StyleNameProduct, WrapperPriceText } from '../../component/CardComponentPageTypeProduct/style'
 import { covertPrice } from '../../untils'
+import { ButtonComponent } from '../../component/ButtonComponent/ButtonComponent'
 export const TypeProductPage = () => {
     const [stateProductType, setStateProductType] = useState([])
     const [type, setType] = useState([])
@@ -20,9 +21,12 @@ export const TypeProductPage = () => {
         total: 0
     })
     const location = useLocation()
-
+    const handleChange = (value) => {
+        console.log(`selected ${value}`);
+    };
     const fetchProductType = async (type, page, limit) => {
-        const res = await ProductService.getTypeProduct(type, page, limit)
+        const res = await ProductService.getTypeProduct(type, page, 9)
+        console.log(res)
         setStateProductType(res)
         setPanigate({
             ...panigate,
@@ -61,62 +65,123 @@ export const TypeProductPage = () => {
             total: panigate?.total
         })
     }
+    const handleReadMore = () => {
+        setPanigate({
+            pageCurrent: panigate?.total,
+            page: 0,
+            limit: 4,
+            total: panigate?.total
+        })
+    }
     const handleDetailProduct = (id) => {
         navigate(`/product-detail/${id}`)
     }
     return (
-        <div style={{ padding: '0 40px', background: '#efefef' }}>
-            <WrapperRow>
-                <WrapperNavbar style={{}} className='navBarLeft' span={4}>
-                    <NavbarComponent types={type} />
-                </WrapperNavbar>
-                <WrapperProduct className='navBarProduct' span={20}>
-                    {stateProductType?.data?.map((product) => {
-                        return (
-                            <CardComponentPageTypeProduct
-                                id={product._id}
-                                key={product._id}
-                                countInStock={product.countInStock}
-                                description={product.description}
-                                image={product.image}
-                                name={product.name}
-                                price={product.price}
-                                rating={product.rating}
-                                type={product.type}
-                                discount={product.discount}
-                                selled={product.selled}
+        <>
 
-                            />
-                        )
-                    })}
-                </WrapperProduct>
-                <WrapperProduct className='navbarMobile' span={20}>
-                    {stateProductType?.data?.map((product) => {
-                        console.log(product)
-                        return (
-                            <Card
-                                onClick={() => handleDetailProduct(product?._id)}
-                                size='small'
-                                hoverable={true}
-                                style={{ width: 105 }}
-                                cover={<img alt="example" src={product?.image} />}
-                            >
-                                <p style={{ fontSize: '10px' }}>{product?.name}</p>
-
-                                <span style={{ marginRight: '10px', fontSize: '10px' }}>
-                                    {covertPrice(product.price)}
-                                </span>
-
-                            </Card>
-                        )
-                    })}
-                </WrapperProduct>
-            </WrapperRow>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                {panigate?.pageCurrent !== panigate?.total && <Button onClick={handleEndPage}>Cuối Trang </Button>}
-                <Pagination showQuickJumper={panigate?.pageCurrent === panigate?.total ? false : true} pageSize={panigate?.limit} current={panigate.pageCurrent} total={panigate?.total + 10} onChange={onChange} disabled={panigate?.pageCurrent === panigate?.total} />
-                {panigate?.pageCurrent === panigate?.total && <Button onClick={handleReturn}>Trở về </Button>}
+            <div style={{ padding: '0 40px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '16px', borderBottom: '1px solid #ccc' }}>
+                <p style={{ color: 'rgb(231,231,231)' }}>Home</p>
+                <p>/ {location.state}</p>
             </div>
-        </div>
+            <WrapperContainer >
+                <WrapperRow className='productPc'>
+                    <WrapperNavbar className='navBarLeft' span={4}>
+                        <NavbarComponent types={type} />
+                    </WrapperNavbar>
+                    <div>
+                        <WrapperSort>
+                            <p className='textSp'>Sản phẩm</p>
+                            <div className='textSort' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
+                                <p>Sắp xếp</p>
+                                <Select
+                                    defaultValue="Bán chạy nhất"
+                                    style={{
+                                        width: 200,
+                                    }}
+                                    onChange={handleChange}
+                                    options={[
+                                        {
+                                            value: 'Bán chạy nhất',
+                                            label: 'Bán chạy nhất',
+                                        },
+                                        {
+                                            value: 'Giá thấp đến cao',
+                                            label: 'Giá thấp đến cao',
+                                        },
+                                        {
+                                            value: 'Giá cao đến thấp',
+                                            label: 'Giá cao đến thấp',
+                                        },
+
+                                    ]}
+                                />
+                            </div>
+                        </WrapperSort>
+                        <WrapperProduct className='navBarProduct' span={20}>
+
+                            {stateProductType?.data?.map((product) => {
+                                return (
+                                    <Card
+                                        onClick={() => handleDetailProduct(product?._id)}
+                                        size='small'
+                                        hoverable={true}
+                                        style={{ width: 'calc(30% - 10px)', marginBottom: '10px' }}
+                                        cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
+                                    >
+                                        <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
+                                        <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            {covertPrice(product.price)}
+                                        </span>
+                                    </Card>
+                                )
+                            })}
+                        </WrapperProduct>
+                    </div>
+
+                </WrapperRow>
+                <div className='productMobile' >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '50px', flexWrap: 'wrap' }}>
+                        {stateProductType?.data?.map((product) => {
+                            return (
+                                <Card
+                                    onClick={() => handleDetailProduct(product?._id)}
+                                    size='small'
+                                    hoverable={true}
+                                    style={{ width: 'calc(50% - 10px)', marginBottom: '10px' }}
+                                    cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
+                                >
+                                    <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
+                                    <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        {covertPrice(product.price)}
+                                    </span>
+                                </Card>
+                            )
+                        })}
+                        <ButtonComponent
+                            size={'40'}
+                            onClick={handleReadMore}
+                            styleButton={{
+                                backgroundColor: "rgb(71,71,76)",
+                                height: '48px',
+                                width: '100%',
+                                border: 'none',
+                                borderRadius: "12px",
+                                margin: "20px 0"
+                            }}
+                            textButton={"Xem thêm"}
+                            styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
+                        >
+                        </ButtonComponent>
+                    </div>
+                </div>
+                <div className='panigate'>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        {panigate?.pageCurrent !== panigate?.total && <Button onClick={handleEndPage}>Cuối Trang </Button>}
+                        <Pagination showQuickJumper={panigate?.pageCurrent === panigate?.total ? false : true} pageSize={panigate?.limit} current={panigate.pageCurrent} total={panigate?.total + 10} onChange={onChange} disabled={panigate?.pageCurrent === panigate?.total} />
+                        {panigate?.pageCurrent === panigate?.total && <Button onClick={handleReturn}>Trở về </Button>}
+                    </div>
+                </div>
+            </WrapperContainer>
+        </>
     )
 }

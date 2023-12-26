@@ -67,11 +67,11 @@ export const WrapperDivTextHover = styled.div`
 
 export const WrapperDivNav = styled.div`
     display: flex;
-     align-items: center
-     justify-content: space-around;
-    margin: 14px 0;
+     align-items: center;
+     justify-content:center;
+    gap:200px;
+    padding:15px 50px;
     @media (max-width:767px){
-      
             display:none;
         
     }

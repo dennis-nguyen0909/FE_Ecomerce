@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { ButtonComponent } from '../../component/ButtonComponent/ButtonComponent'
 import LoadingComponent from '../../component/LoadingComponent/LoadingComponent'
-import { InputForm, WrapperDivStyle } from './style'
+import { InputForm, WrapperDivStyle, WrapperDivPayment } from './style'
 import { PayPalButton } from "react-paypal-button-v2";
 import { decreaseAmount, increaseAmount, removeAllOrderProduct, removeOrderProduct, selectedOrder, totalAllProduct, resetOrder } from '../../redux/slides/orderSlide'
 import { covertPrice } from '../../untils'
@@ -232,108 +232,209 @@ export const PaymentPage = () => {
 
 
     return (
-        <Row style={{ marginTop: '80px' }} >
+        <WrapperDivPayment>
+            <div className='paymentPc'>
+                <Row style={{ marginTop: '80px' }} >
+                    <Col span={12} style={{ width: 'fit-content' }}>
+                        <Form
+                            form={formModal}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
+                                <WrapperDivStyle>Thông tin giao hàng</WrapperDivStyle>
 
+                            </div>
+                            <InputForm
+                                style={{ with: '100px' }}
+                                placeholder={'Họ Tên'}
+                                name='name'
+                                value={user?.name && user?.name}
+                            />
+                            <div style={{ display: 'flex' }}>
+                                <InputForm
+                                    placeholder={'Email'}
+                                    name='email'
+                                    value={user?.email && user?.email}
 
+                                />
+                                <InputForm
+                                    placeholder={'Số điện thoại'}
+                                    name="phone"
+                                    value={user?.phone && user?.phone}
 
-            <Col span={12} style={{ width: 'fit-content' }}>
-                <Form
-                    form={formModal}
-                >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
-                        <WrapperDivStyle>Thông tin giao hàng</WrapperDivStyle>
-
-                    </div>
-                    <InputForm
-                        style={{ with: '100px' }}
-                        placeholder={'Họ Tên'}
-                        name='name'
-                        value={user?.name && user?.name}
-                    />
-                    <div style={{ display: 'flex' }}>
-                        <InputForm
-                            placeholder={'Email'}
-                            name='email'
-                            value={user?.email && user?.email}
-
-                        />
-                        <InputForm
-                            placeholder={'Số điện thoại'}
-                            name="phone"
-                            value={user?.phone && user?.phone}
-
-                        />
-                    </div>
-
-                    <InputForm
-                        placeholder={'Địa Chỉ'}
-                        name="address"
-                        // value={allAddress ? allAddress : user?.address}
-                        value={user?.address + " " + user?.ward + " " + user?.districts + " " + user?.city}
-
-                    />
-
-                    {/* <LoadingComponent > */}
-                    <div style={{ margin: '20px 20px', border: '1px solid #ccc', padding: '20px 40px', }}>
-                        <div>Tạm tính :{covertPrice(priceMemo)}</div>
-                        <div>Giảm giá : {priceDiscount}%</div>
-                        <div>Phí giao hàng :{covertPrice(deliveryPrice)}</div>
-                        <div>Tổng tiền :{covertPrice(totalPriceAll)}</div>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {payment === "paypal" && sdk ? (
-                            <div style={{ with: '500px' }}>
-                                <PayPalButton
-                                    amount={(totalPriceAll / 24000).toFixed(2)}
-                                    shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
-                                    onSuccess={onSuccessPaypal}
-                                    onError={(err) => {
-                                        alert(err)
-                                    }}
                                 />
                             </div>
-                        ) : (
-                            <div style={{ width: '500px' }}>
-                                <LoadingComponent isLoading={loading} delay={2000} >
-                                    <ButtonComponent
-                                        onClick={handleAddOrder}
-                                        size={'40'}
-                                        styleButton={{
-                                            backgroundColor: "rgb(71,71,71)",
-                                            height: '48px',
-                                            width: '100%',
-                                            border: 'none',
-                                            borderRadius: "12px",
-                                            margin: "20px 0"
-                                        }}
-                                        textButton={"Đặt Hàng"}
-                                        styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
-                                    />
-                                </LoadingComponent>
+
+                            <InputForm
+                                placeholder={'Địa Chỉ'}
+                                name="address"
+                                // value={allAddress ? allAddress : user?.address}
+                                value={user?.address + " " + user?.ward + " " + user?.districts + " " + user?.city}
+
+                            />
+
+                            {/* <LoadingComponent > */}
+                            <div style={{ margin: '20px 20px', border: '1px solid #ccc', padding: '20px 40px', }}>
+                                <div>Tạm tính :{covertPrice(priceMemo)}</div>
+                                <div>Giảm giá : {priceDiscount}%</div>
+                                <div>Phí giao hàng :{covertPrice(deliveryPrice)}</div>
+                                <div>Tổng tiền :{covertPrice(totalPriceAll)}</div>
                             </div>
-                        )}
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                {payment === "paypal" && sdk ? (
+                                    <div style={{ with: '500px' }}>
+                                        <PayPalButton
+                                            amount={(totalPriceAll / 24000).toFixed(2)}
+                                            shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                                            onSuccess={onSuccessPaypal}
+                                            onError={(err) => {
+                                                alert(err)
+                                            }}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div style={{ width: '500px' }}>
+                                        <LoadingComponent isLoading={loading} delay={2000} >
+                                            <ButtonComponent
+                                                onClick={handleAddOrder}
+                                                size={'40'}
+                                                styleButton={{
+                                                    backgroundColor: "rgb(71,71,71)",
+                                                    height: '48px',
+                                                    width: '100%',
+                                                    border: 'none',
+                                                    borderRadius: "12px",
+                                                    margin: "20px 0"
+                                                }}
+                                                textButton={"Đặt Hàng"}
+                                                styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
+                                            />
+                                        </LoadingComponent>
+                                    </div>
+                                )}
+                            </div>
+                            {/* </LoadingComponent> */}
+                        </Form>
+                    </Col>
+                    <Col span={12} style={{ borderLeft: '1px solid #ccc', height: '500px' }}>
+                        <div>
+                            <h1>Chọn phương thức giao hàng</h1>
+                            <Radio.Group onChange={handleDelivery} value={delivery}>
+                                <Radio value="fast"><span style={{ color: '#ea8500', fontWeight: 'bold' }}>FAST</span> Giao hàng tiết kiệm</Radio>
+                                <Radio value="gojek"><span style={{ color: '#ea8500', fontWeight: 'bold' }}>GO_JEK</span> Giao hàng tiết kiệm</Radio>
+                            </Radio.Group>
+                        </div>
+                        <div>
+                            <h1>Chọn phương thức thanh toán</h1>
+                            <Radio.Group onChange={handlePayment} value={payment}>
+                                <Radio value="later_money"> Thanh toán tiền mặt khi nhận hàng</Radio>
+                                <Radio value="paypal">Thanh toán bằng paypal</Radio>
+                            </Radio.Group>
+                        </div>
+
+                    </Col>
+                </Row >
+            </div>
+            <div className='paymentMobile'>
+                <LoadingComponent isLoading={loading} delay={1000} >
+                    <div style={{ padding: '0 10px' }} >
+                        <div>
+                            <p style={{ display: 'flex', fontWeight: 'bold' }}>Chọn phương thức giao hàng</p>
+                            <Radio.Group onChange={handleDelivery} value={delivery} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', padding: '0 20px' }}>
+                                <Radio value="fast"><span style={{ color: '#ea8500', fontWeight: 'bold', fontSize: '14px' }}>FAST</span> Giao hàng tiết kiệm</Radio>
+                                <Radio value="gojek"><span style={{ color: '#ea8500', fontWeight: 'bold', fontSize: '14px' }}>GO_JEK</span> Giao hàng tiết kiệm</Radio>
+                            </Radio.Group>
+                        </div>
+                        <div>
+                            <p style={{ display: 'flex', fontWeight: 'bold' }}>Chọn phương thức thanh toán</p>
+                            <Radio.Group onChange={handlePayment} value={payment} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', padding: '0 20px' }}>
+                                <Radio style={{ fontSize: '14px' }} value="later_money"> Thanh toán tiền mặt khi nhận hàng</Radio>
+                                <Radio value="paypal">Thanh toán bằng paypal</Radio>
+                            </Radio.Group>
+                        </div>
+
                     </div>
-                    {/* </LoadingComponent> */}
-                </Form>
-            </Col>
-            <Col span={12} style={{ borderLeft: '1px solid #ccc', height: '500px' }}>
-                <div>
-                    <h1>Chọn phương thức giao hàng</h1>
-                    <Radio.Group onChange={handleDelivery} value={delivery}>
-                        <Radio value="fast"><span style={{ color: '#ea8500', fontWeight: 'bold' }}>FAST</span> Giao hàng tiết kiệm</Radio>
-                        <Radio value="gojek"><span style={{ color: '#ea8500', fontWeight: 'bold' }}>GO_JEK</span> Giao hàng tiết kiệm</Radio>
-                    </Radio.Group>
-                </div>
-                <div>
-                    <h1>Chọn phương thức thanh toán</h1>
-                    <Radio.Group onChange={handlePayment} value={payment}>
-                        <Radio value="later_money"> Thanh toán tiền mặt khi nhận hàng</Radio>
-                        <Radio value="paypal">Thanh toán bằng paypal</Radio>
-                    </Radio.Group>
-                </div>
+                    <div>
+                        <Form
+                            form={formModal}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
+                                <p style={{ fontWeight: 'bold' }}>Thông tin giao hàng</p>
+                            </div>
+                            <div style={{ padding: '0 20px' }}>
+                                <InputForm
+                                    style={{ with: '100px' }}
+                                    placeholder={'Họ Tên'}
+                                    name='name'
+                                    value={user?.name && user?.name}
+                                />
+                                <div style={{ display: 'flex' }}>
+                                    <InputForm
+                                        placeholder={'Email'}
+                                        name='email'
+                                        value={user?.email && user?.email}
 
-            </Col>
+                                    />
+                                    <InputForm
+                                        placeholder={'Số điện thoại'}
+                                        name="phone"
+                                        value={user?.phone && user?.phone}
 
-        </Row >
+                                    />
+                                </div>
+
+                                <InputForm
+                                    placeholder={'Địa Chỉ'}
+                                    name="address"
+                                    // value={allAddress ? allAddress : user?.address}
+                                    value={user?.address + " " + user?.ward + " " + user?.districts + " " + user?.city}
+
+                                />
+
+                                {/* <LoadingComponent > */}
+                                <div style={{ margin: '20px 20px', border: '1px solid #ccc', padding: '20px 40px', }}>
+                                    <div>Tạm tính :{covertPrice(priceMemo)}</div>
+                                    <div>Giảm giá : {priceDiscount}%</div>
+                                    <div>Phí giao hàng :{covertPrice(deliveryPrice)}</div>
+                                    <div>Tổng tiền :{covertPrice(totalPriceAll)}</div>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    {payment === "paypal" && sdk ? (
+                                        <div style={{ with: '500px' }}>
+                                            <PayPalButton
+                                                amount={(totalPriceAll / 24000).toFixed(2)}
+                                                shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                                                onSuccess={onSuccessPaypal}
+                                                onError={(err) => {
+                                                    alert(err)
+                                                }}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div style={{ width: '500px' }}>
+                                            <ButtonComponent
+                                                onClick={handleAddOrder}
+                                                size={'40'}
+                                                styleButton={{
+                                                    backgroundColor: "rgb(71,71,71)",
+                                                    height: '48px',
+                                                    width: '100%',
+                                                    border: 'none',
+                                                    borderRadius: "12px",
+                                                    margin: "20px 0"
+                                                }}
+                                                textButton={"Đặt Hàng"}
+                                                styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
+                                            />
+
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </Form>
+                    </div>
+                </LoadingComponent>
+            </div >
+        </WrapperDivPayment >
+
     )
 }

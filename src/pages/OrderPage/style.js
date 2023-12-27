@@ -14,3 +14,18 @@ export const InputForm = styled(Input)`
     margin:10px 0;
 
 `
+export const WrapperDivOrder = styled.div`
+@media (max-width:767px){
+    .orderPC{
+        display:none;
+    }
+    .orderMobile{
+        display:block;
+    }
+}
+@media(min-width:767px){
+    .orderMobile{
+        display:none;
+    }
+}
+`

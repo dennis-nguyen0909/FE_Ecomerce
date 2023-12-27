@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { WrapperContainerProfile, WrapperDivContainer, WrapperLabelText } from './style'
+import React, { useRef, useState } from 'react'
+import { WrapperContainerProfile, WrapperDivContainer, WrapperLabelText, WrapperDiv, WrapperP } from './style'
 import { InputForm } from '../../component/InputForm/InputForm'
 import { ButtonComponent } from '../../component/ButtonComponent/ButtonComponent'
-import { Col, Form, Image, Input, Row, message } from 'antd'
+import { Button, Col, Form, Image, Input, Row, message } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMutationHook } from '../../hooks/userMutationHook'
 import * as UserService from '../../services/UserService'
@@ -51,6 +51,17 @@ export const ProfileUserPage = () => {
             UserService.updateUser(id, rests, access_token)
         }
     )
+    const fileInputRef = useRef(null);
+
+    const handleClick = () => {
+        if (fileInputRef && fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        postDetail(selectedFile);
+    };
 
     const handleOnChangeEmail = (value) => {
         setEmail(value)
@@ -105,8 +116,8 @@ export const ProfileUserPage = () => {
         // thì bên userSlide sẽ nhận được state và action trong đó action.payload là data user
     }
     return (
-        <>
-            <Row style={{ padding: '0 120px' }}>
+        <WrapperDiv>
+            <Row className='wrapperPC' style={{ padding: '0 120px' }}>
                 <Col span={10} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                     <div>
                         {avatar ? (
@@ -149,7 +160,6 @@ export const ProfileUserPage = () => {
                 </Col>
 
                 <Col span={14}>
-
                     <WrapperContainerProfile>
                         <WrapperDivContainer>Thông tin cá nhân</WrapperDivContainer>
                         <InputForm
@@ -201,7 +211,84 @@ export const ProfileUserPage = () => {
                     </WrapperContainerProfile >
                 </Col>
             </Row>
-        </>
+            <div className='wrapperMobile'>
+                <div style={{ display: 'flex', justifyContent: 'space-between', margin: '0 10px' }}>
+                    <h3 style={{ padding: '10px 10px' }}>Ảnh đại diện</h3>
+                    <div onClick={handleClick} style={{ cursor: 'pointer' }}>
+                        {/* Hiển thị nút hoặc hình ảnh để kích thích sự kiện click */}
+                        <WrapperP>Chỉnh sửa</WrapperP>
+                    </div>
+                    {/* Ẩn input và sử dụng để chọn tệp */}
+                    <input
+                        type='file'
+                        ref={fileInputRef}
+                        style={{ display: 'none' }}
+                        accept='image/*'
+                        onChange={handleFileChange}
+                    />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    {avatar ? (
+                        <img preview={false} src={avatar} style={{
+                            height: '180px', width: '180px', objectFit: 'cover', borderRadius: '50%'
+                        }} />
+                    ) : <Image src={avatarDefault} style={{
+                        height: '250px', width: '250px', objectFit: 'cover', borderRadius: '50%'
+                    }} />}
+                </div>
+                <div>
+                    <h3 style={{ padding: '10px 10px', display: 'flex', justifyContent: 'center' }}>Thông tin cá nhân</h3>
+                    <div style={{ margin: '0 10px' }}>
+                        <InputForm
+                            label={'Họ và tên :'}
+                            placeholder={user.name}
+                            value={name} onChange={handleOnChangeName}
+                        />
+
+
+                        <InputForm
+                            label={'Email :'}
+                            isEmail={false}
+                            placeholder={user.email}
+                            value={email} onChange={handleOnChangeEmail}
+
+                        />
+                        <InputForm
+                            label={'Role:'}
+                            placeholder={user.isAdmin === false ? "User" : "Admin"}
+                            value={isAdmin} onChange={handleOnChangeAdmin}
+                        />
+                        <InputForm
+                            label={'Số điện thoại :'}
+                            placeholder={user.phone}
+                            value={phone} onChange={handleOnChangePhone}
+                        />
+                        <InputForm
+                            label={'Địa chỉ :'}
+                            placeholder={user.address}
+                            value={address} onChange={handleOnChangeAddress}
+                        />
+                        <LoadingComponent isLoading={isPending}>
+
+                            <ButtonComponent
+                                size={'40'}
+                                onClick={handleUpdate}
+                                styleButton={{
+                                    backgroundColor: "rgb(71,71,71)",
+                                    height: '48px',
+                                    width: '100%',
+                                    border: 'none',
+                                    borderRadius: "12px",
+                                    margin: "20px 0"
+                                }}
+                                textButton={"Lưu"}
+                                styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
+                            />
+                        </LoadingComponent>
+                    </div >
+                </div>
+            </div>
+        </WrapperDiv >
 
     )
 }

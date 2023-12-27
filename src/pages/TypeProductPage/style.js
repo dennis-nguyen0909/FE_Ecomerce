@@ -58,6 +58,9 @@ background-color:#fff;
     .productMobile{
         display:block;
     }
+    .panigate{
+        display:none;
+    }
 }
 @media (min-width:767px){
     .productMobile{

@@ -20,3 +20,19 @@ export const WrapperDiv = styled.div`
  justify-content: space-between;
   margin-right: 500px;
 `
+export const WrapperDivSuccess = styled.div`
+@media (max-width:767px){
+
+    .orderPageSuccessPc{
+        display:none;
+    }
+    .orderPageSuccessMobile{
+        display:block;
+    }
+}
+@media (min-width:767px){
+    .orderPageSuccessMobile{
+        display:none;
+    }
+}
+`

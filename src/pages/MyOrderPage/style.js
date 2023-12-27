@@ -22,3 +22,18 @@ display: flex;
    gap: 10px;
 
 `
+export const WrapperDivOrder = styled.div`
+    @media (max-width:767px){
+        .myOrderProduct{
+            display:none;
+        }
+        .myOrderProductMobile{
+            display:block;
+        }
+    }
+    @media (min-width:767px){
+        .myOrderProductMobile{
+            display:none;
+        }
+    }
+`

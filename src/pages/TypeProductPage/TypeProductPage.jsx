@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { NavbarComponent } from '../../component/NavbarComponent/NavbarComponent'
-import { Button, Card, Pagination, Row, Space, Select } from 'antd'
+import { Button, Card, Pagination, Row, Space, Select, Checkbox, Collapse } from 'antd'
 import { WrapperNavbar, WrapperProduct, WrapperRow, WrapperContainer, WrapperSort } from './style'
 import { useLocation, useNavigate } from 'react-router-dom'
 import * as ProductService from '../../services/ProductService'
@@ -14,6 +14,7 @@ export const TypeProductPage = () => {
     const [stateProductType, setStateProductType] = useState([])
     const [type, setType] = useState([])
     const navigate = useNavigate()
+    const [selectedSort, setSelectedSort] = useState('')
     const [panigate, setPanigate] = useState({
         pageCurrent: 0,
         page: 0,
@@ -22,17 +23,16 @@ export const TypeProductPage = () => {
     })
     const location = useLocation()
     const handleChange = (value) => {
-        console.log(`selected ${value}`);
+        setSelectedSort(value);
     };
     const fetchProductType = async (type, page, limit) => {
-        const res = await ProductService.getTypeProduct(type, page, 9)
-        console.log(res)
+        const res = await ProductService.getTypeProduct(type, page, limit)
         setStateProductType(res)
-        setPanigate({
-            ...panigate,
-            pageCurrent: res?.pageCurrent,
-            total: res?.totalPage
-        })
+        // setPanigate({
+        //     ...panigate,
+        //     pageCurrent: res?.pageCurrent,
+        //     total: res?.totalPage
+        // })
     }
     useEffect(() => {
         if (location.state) {
@@ -67,15 +67,30 @@ export const TypeProductPage = () => {
     }
     const handleReadMore = () => {
         setPanigate({
-            pageCurrent: panigate?.total,
+            pageCurrent: 0,
             page: 0,
-            limit: 4,
+            limit: 9,
             total: panigate?.total
         })
     }
     const handleDetailProduct = (id) => {
         navigate(`/product-detail/${id}`)
     }
+    const originalData = stateProductType?.data || []; // Bảo đảm rằng data không phải là null hoặc undefined
+    const sortedProducts = originalData.slice().sort((a, b) => b.selled - a.selled);
+    const sortedPriceMin = originalData.slice().sort((a, b) => b.price - a.price);
+    const sortedPriceMax = originalData.slice().sort((a, b) => a.price - b.price);
+    const countProduct = (stateProductType?.data || []).length;
+
+    const items = [
+        {
+            key: '1',
+            label: 'Price',
+            children: <p>
+                <Checkbox>100-300</Checkbox>
+            </p>,
+        },
+    ]
     return (
         <>
 
@@ -87,10 +102,11 @@ export const TypeProductPage = () => {
                 <WrapperRow className='productPc'>
                     <WrapperNavbar className='navBarLeft' span={4}>
                         <NavbarComponent types={type} />
+                        <Collapse style={{ marginRight: '20px', color: 'rgb(56,56,61)', fontSize: '18px', padding: '10px 0', borderBottom: '1px solid #ccc' }} defaultActiveKey={['1']} ghost items={items} />
                     </WrapperNavbar>
                     <div>
                         <WrapperSort>
-                            <p className='textSp'>Sản phẩm</p>
+                            <p className='textSp'>{countProduct} Sản phẩm</p>
                             <div className='textSort' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
                                 <p>Sắp xếp</p>
                                 <Select
@@ -101,15 +117,15 @@ export const TypeProductPage = () => {
                                     onChange={handleChange}
                                     options={[
                                         {
-                                            value: 'Bán chạy nhất',
+                                            value: 'sales',
                                             label: 'Bán chạy nhất',
                                         },
                                         {
-                                            value: 'Giá thấp đến cao',
+                                            value: 'min',
                                             label: 'Giá thấp đến cao',
                                         },
                                         {
-                                            value: 'Giá cao đến thấp',
+                                            value: 'max',
                                             label: 'Giá cao đến thấp',
                                         },
 
@@ -118,14 +134,43 @@ export const TypeProductPage = () => {
                             </div>
                         </WrapperSort>
                         <WrapperProduct className='navBarProduct' span={20}>
-
-                            {stateProductType?.data?.map((product) => {
+                            {selectedSort === "sales" ? sortedProducts?.map((product) => {
                                 return (
                                     <Card
                                         onClick={() => handleDetailProduct(product?._id)}
                                         size='small'
                                         hoverable={true}
-                                        style={{ width: 'calc(30% - 10px)', marginBottom: '10px' }}
+                                        style={{ width: 'calc(30% - 10px)', marginBottom: '10px', marginTop: '10px' }}
+                                        cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
+                                    >
+                                        <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
+                                        <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            {covertPrice(product.price)}
+                                        </span>
+                                    </Card>
+                                )
+                            }) : selectedSort === "max" ? sortedPriceMin?.map((product) => {
+                                return (
+                                    <Card
+                                        onClick={() => handleDetailProduct(product?._id)}
+                                        size='small'
+                                        hoverable={true}
+                                        style={{ width: 'calc(30% - 10px)', marginBottom: '10px', marginTop: '10px' }}
+                                        cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
+                                    >
+                                        <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
+                                        <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            {covertPrice(product.price)}
+                                        </span>
+                                    </Card>
+                                )
+                            }) : sortedPriceMax?.map((product) => {
+                                return (
+                                    <Card
+                                        onClick={() => handleDetailProduct(product?._id)}
+                                        size='small'
+                                        hoverable={true}
+                                        style={{ width: 'calc(30% - 10px)', marginBottom: '10px', marginTop: '10px' }}
                                         cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
                                     >
                                         <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
@@ -139,9 +184,39 @@ export const TypeProductPage = () => {
                     </div>
 
                 </WrapperRow>
-                <div className='productMobile' >
+                <div className='productMobile' style={{ margin: '10px 0' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '50px', flexWrap: 'wrap' }}>
-                        {stateProductType?.data?.map((product) => {
+                        {selectedSort === "sales" ? sortedProducts?.map((product) => {
+                            return (
+                                <Card
+                                    onClick={() => handleDetailProduct(product?._id)}
+                                    size='small'
+                                    hoverable={true}
+                                    style={{ width: 'calc(50% - 10px)', marginBottom: '10px' }}
+                                    cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
+                                >
+                                    <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
+                                    <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        {covertPrice(product.price)}
+                                    </span>
+                                </Card>
+                            )
+                        }) : selectedSort === "min" ? sortedPriceMax?.map((product) => {
+                            return (
+                                <Card
+                                    onClick={() => handleDetailProduct(product?._id)}
+                                    size='small'
+                                    hoverable={true}
+                                    style={{ width: 'calc(50% - 10px)', marginBottom: '10px' }}
+                                    cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
+                                >
+                                    <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
+                                    <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        {covertPrice(product.price)}
+                                    </span>
+                                </Card>
+                            )
+                        }) : sortedPriceMin.map((product) => {
                             return (
                                 <Card
                                     onClick={() => handleDetailProduct(product?._id)}

@@ -14,3 +14,19 @@ export const InputForm = styled(Input)`
     margin:10px 0;
 
 `
+
+export const WrapperDivPayment = styled.div`
+     @media (max-width:767px){
+        .paymentPc{
+            display:none;
+        }
+        .paymentMobile{
+            display:block;
+        }
+     }
+     @media (min-width:767px){
+        .paymentMobile{
+            display:none;
+        }
+     }
+`

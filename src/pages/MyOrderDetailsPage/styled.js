@@ -67,7 +67,6 @@ export const WrapperNameProduct = styled.div`
 `
 
 export const WrapperItem = styled.div`
-  width: 200px;
   font-weight: bold;
   &:last-child {
     color: red
@@ -87,4 +86,19 @@ export const WrapperAllPrice = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end
+`
+export const WrapperDiv = styled.div`
+  @media (max-width:767px){
+    .myOrderDetailsPc{
+      display:none;
+    }
+    .myOrderDetailsMobile{
+      display:block;
+    }
+  }
+  @media (min-width:767px){
+     .myOrderDetailsMobile{
+      display:none;
+    }
+  }
 `

@@ -32,7 +32,7 @@ export const WrapperLabelForm = styled.label`
 
 `
 
-export const WrapperUploadFile=styled(Upload)`
+export const WrapperUploadFile = styled(Upload)`
     & .ant-upload.ant-upload-select-picture-card{
         width:60px;
         height:60px;
@@ -40,5 +40,29 @@ export const WrapperUploadFile=styled(Upload)`
     }
     & .ant-upload-list-item-info{
         display:none;
+    }
+`
+export const WrapperDiv = styled.div`
+
+@media (max-width:767px){
+    .wrapperPC{
+        display:none;
+    }
+    .wrapperMobile{
+        display:block;
+    }
+}
+@media(min-width:767px){
+     .wrapperMobile{
+        display:none;
+    }
+}
+`
+export const WrapperP = styled.p`
+    border-radius:10px;
+    color:rgb(17,104,211);
+    padding:10px 10px;
+    &:hover{
+        background-color:rgb(231,231,231);
     }
 `

@@ -18,53 +18,63 @@ export const routes = [
     {
         path: '/',
         page: HomePage,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
     },
     {
         path: '/payment',
         page: PaymentPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
     },
     {
         path: '/my-order-detail/:id',
         page: MyOrderDetailsPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
     },
     {
         path: '/my-order',
         page: MyOrderPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
     },
     {
         path: '/order',
         page: OrderPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
     },
     {
         path: '/order-success',
         page: OrderSuccessPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
     },
     {
         path: '/product',
         page: ProductPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
 
     },
     {
         path: '/product-sales',
         page: SalesProduct,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
     },
     {
         path: '/product/:type',
         page: TypeProductPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
     },
     {
         path: '/search-product',
         page: SearchProduct,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
     },
     {
         path: '/login',
@@ -79,12 +89,14 @@ export const routes = [
     {
         path: '/product-detail/:id',
         page: ProductDetailPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
     },
     {
         path: '/profile-user',
         page: ProfileUserPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isShowFooter: true,
     },
     {
         path: '/system/admin',

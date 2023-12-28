@@ -71,5 +71,6 @@ export const getAllTypeProduct = async () => {
 }
 export const getDiscountProduct = async () => {
     const res = await axios.get(`${process.env.REACT_APP_API}product/get-all-discount`)
+
     return res.data;
 }

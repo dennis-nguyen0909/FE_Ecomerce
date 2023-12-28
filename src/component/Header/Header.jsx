@@ -200,8 +200,10 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const sum = order?.orderItems?.reduce((acc, cur) => {
         return acc + cur.price * cur.amount;
     }, 0)
-    console.log(sum)
 
+    const handleNavigatePageSales = () => {
+        navigate('/product-sales')
+    }
     return (
         <WrapperDiv>
             <div style={{ backgroundColor: 'black', height: '30px', display: 'flex', alignItems: 'center', paddingLeft: '40px' }}>
@@ -467,7 +469,7 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                     )
                                 })}
                             </Menu.SubMenu>
-                            <Menu.Item key="sales" >
+                            <Menu.Item key="sales" onClick={handleNavigatePageSales}>
                                 Giảm giá
                             </Menu.Item>
                             <Menu.Item key="chamsoc" >

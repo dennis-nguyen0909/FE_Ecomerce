@@ -128,3 +128,18 @@ width:300px;
 }
 
 `
+export const WrapperDivContainer = styled.div`
+    @media (max-width:767px){
+        .rowPc{
+            display:none;
+        }
+        .mobile{
+            display:block;
+        }
+    }
+    @media (min-width:767px){
+        .mobile{
+            display:none;
+        }
+    }
+`

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { NavbarComponent } from '../../component/NavbarComponent/NavbarComponent'
-import { Button, Card, Pagination, Row, Space, Select, Checkbox, Collapse } from 'antd'
+import { Button, Card, Pagination, Row, Space, Select, Checkbox, Collapse, Skeleton } from 'antd'
 import { WrapperNavbar, WrapperProduct, WrapperRow, WrapperContainer, WrapperSort } from './style'
 import { useLocation, useNavigate } from 'react-router-dom'
 import * as ProductService from '../../services/ProductService'
@@ -28,11 +28,11 @@ export const TypeProductPage = () => {
     const fetchProductType = async (type, page, limit) => {
         const res = await ProductService.getTypeProduct(type, page, limit)
         setStateProductType(res)
-        // setPanigate({
-        //     ...panigate,
-        //     pageCurrent: res?.pageCurrent,
-        //     total: res?.totalPage
-        // })
+        setPanigate({
+            ...panigate,
+            pageCurrent: res?.pageCurrent,
+            total: res?.totalPage
+        })
     }
     useEffect(() => {
         if (location.state) {
@@ -91,6 +91,26 @@ export const TypeProductPage = () => {
             </p>,
         },
     ]
+    const handleScroll = () => {
+        const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        // Kiểm tra xem người dùng đã cuộn xuống cuối chưa
+        if (scrollY + windowHeight >= documentHeight - 100) {
+            // Tải thêm sản phẩm với giới hạn tăng lên
+            const newLimit = panigate.limit + 4;
+            fetchProductType(location.state, panigate.page, newLimit);
+        }
+    };
+    useEffect(() => {
+        // Gắn trình nghe sự kiện cuộn khi thành phần được tạo
+        window.addEventListener('scroll', handleScroll);
+
+        // Loại bỏ trình nghe sự kiện khi thành phần bị hủy
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [location.state, panigate.page, panigate.limit]);
     return (
         <>
 
@@ -186,6 +206,9 @@ export const TypeProductPage = () => {
                 </WrapperRow>
                 <div className='productMobile' style={{ margin: '10px 0' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '50px', flexWrap: 'wrap' }}>
+                        {stateProductType?.length === 0 && <>
+                            <Skeleton active />
+                        </>}
                         {selectedSort === "sales" ? sortedProducts?.map((product) => {
                             return (
                                 <Card
@@ -216,7 +239,7 @@ export const TypeProductPage = () => {
                                     </span>
                                 </Card>
                             )
-                        }) : sortedPriceMin.map((product) => {
+                        }) : selectedSort === "max" ? sortedPriceMin.map((product) => {
                             return (
                                 <Card
                                     onClick={() => handleDetailProduct(product?._id)}
@@ -231,8 +254,23 @@ export const TypeProductPage = () => {
                                     </span>
                                 </Card>
                             )
-                        })}
-                        <ButtonComponent
+                        }) : !selectedSort ? stateProductType?.data?.map((product) => {
+                            return (
+                                <Card
+                                    onClick={() => handleDetailProduct(product?._id)}
+                                    size='small'
+                                    hoverable={true}
+                                    style={{ width: 'calc(50% - 10px)', marginBottom: '10px' }}
+                                    cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
+                                >
+                                    <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
+                                    <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        {covertPrice(product.price)}
+                                    </span>
+                                </Card>
+                            )
+                        }) : <Skeleton active />}
+                        {/* <ButtonComponent
                             size={'40'}
                             onClick={handleReadMore}
                             styleButton={{
@@ -246,7 +284,7 @@ export const TypeProductPage = () => {
                             textButton={"Xem thêm"}
                             styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
                         >
-                        </ButtonComponent>
+                        </ButtonComponent> */}
                     </div>
                 </div>
                 <div className='panigate'>

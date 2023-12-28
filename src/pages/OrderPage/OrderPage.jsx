@@ -452,13 +452,15 @@ export const OrderPage = () => {
             </div>
             <div className='orderMobile'>
                 <div style={{ padding: '0 40px', }}>
-                    <div style={{ display: 'flex', justifyContent: 'center', fontSize: '20px', borderBottom: '1px solid #ccc', padding: '10px 0' }}>Giỏ hàng </div>
-                    <div>
-                        <span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '20px', padding: '10px 0', borderBottom: '1px solid #ccc' }}>
+                        <p style={{ fontSize: '14px', fontWeight: 'bold' }}>Giỏ hàng</p>
+                        <span style={{ fontSize: '14px' }}>
                             <Checkbox onChange={handleCheckAllChecked} checked={selectedCheck?.length === order?.orderItems?.length} />
                             <span>Tất cả {order?.orderItems?.length} sản phẩm </span>
                             <DeleteOutlined onClick={handleDeleteAllOrder} />
                         </span>
+                    </div>
+                    <div>
 
                     </div>
                     {order?.orderItems?.length ? order?.orderItems?.map((item) => {
@@ -470,7 +472,7 @@ export const OrderPage = () => {
                                         <img width={'130px'} height={'130px'} objectFit={'cover'} src={item.image} />
                                     </div>
                                     <div style={{ padding: '0 10px' }}>
-                                        <h3>Tên sản phẩm :{item.name}</h3>
+                                        <h3>{item.name}</h3>
                                         <p>Size: {item.size}</p>
                                         <p>Giảm giá:</p>
                                         <p>Số lượng : {item?.amount}</p>
@@ -519,6 +521,6 @@ export const OrderPage = () => {
                     styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
                 />
             </div>
-        </WrapperDivOrder>
+        </WrapperDivOrder >
     )
 }

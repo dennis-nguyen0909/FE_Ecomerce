@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Badge, Popover, Button, message, Menu, Dropdown, Switch, } from 'antd'
-import { WrapperHeader, WrapperIcon, WrapperLogoHeader, WrapperLogout, WrapperDiv, WrapperDivMenu, WrapperHeaderMobile, WrapperDivProduct } from './style'
+import { WrapperHeader, WrapperIcon, WrapperLogoHeader, WrapperLogout, WrapperDiv, WrapperDivMenu, WrapperHeaderMobile, WrapperDivProduct, WrapperSearch } from './style'
 import { UserOutlined, ShoppingCartOutlined, DribbbleOutlined, SearchOutlined, MenuOutlined, AppstoreOutlined, RightOutlined, SettingOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { WrapperAccount } from './style'
 import { ButtonInputSearch } from '../ButtonInputSearch/ButtonInputSearch'
@@ -302,33 +302,65 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 key={placement}
 
             >
-                {!isHiddenSearch && (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '40px' }}>
-                        <InputComponent
-                            placeholder="Tìm kiếm sản phẩm ...."
-                            textButton="Tìm kiếm"
-                            size="large"
-                            value={search}
-                            onChange={onSearch}
 
-                        />
-                        <ButtonComponent
-                            onClick={onClickSearch}
-                            size={'40'}
-                            styleButton={{
-                                backgroundColor: "rgb(71,71,76)",
-                                height: '40px',
-                                width: '400px',
-                                border: 'none',
-                                borderRadius: "12px",
-                                margin: "20px 0"
-                            }}
-                            textButton={"Search"}
-                            styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
-                        >
-                        </ButtonComponent>
-                    </div>
+                {!isHiddenSearch && (
+                    <WrapperSearch>
+                        <div className='searchPc'>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '40px' }}>
+                                <InputComponent
+                                    placeholder="Tìm kiếm sản phẩm ...."
+                                    textButton="Tìm kiếm"
+                                    size="large"
+                                    value={search}
+                                    onChange={onSearch}
+
+                                />
+                                <ButtonComponent
+                                    onClick={onClickSearch}
+                                    size={'40'}
+                                    styleButton={{
+                                        backgroundColor: "rgb(71,71,76)",
+                                        height: '40px',
+                                        width: '400px',
+                                        border: 'none',
+                                        borderRadius: "12px",
+                                        margin: "20px 0"
+                                    }}
+                                    textButton={"Search"}
+                                    styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
+                                >
+                                </ButtonComponent>
+                            </div>
+                        </div>
+                        <div className='searchMobile'>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                                <InputComponent
+                                    placeholder="Tìm kiếm sản phẩm ...."
+                                    textButton="Tìm kiếm"
+                                    size="large"
+                                    value={search}
+                                    onChange={onSearch}
+                                />
+                                <ButtonComponent
+                                    onClick={onClickSearch}
+                                    size={'40'}
+                                    styleButton={{
+                                        backgroundColor: "rgb(71,71,76)",
+                                        height: '40px',
+                                        width: '100%',
+                                        border: 'none',
+                                        borderRadius: "12px",
+                                        margin: "20px 0"
+                                    }}
+                                    textButton={"Search"}
+                                    styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
+                                >
+                                </ButtonComponent>
+                            </div>
+                        </div>
+                    </WrapperSearch>
                 )}
+
             </DrawerComponent>
             <Drawer
                 title="Sneaker Asia"
@@ -427,8 +459,8 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                             <Menu.SubMenu key="products" title="Sản phẩm">
                                 {typeProduct.map((item, index) => {
                                     return (
-                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                            <Menu.Item key={`product-${index}`} icon={<RightOutlined />}  >
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 20px' }}>
+                                            <Menu.Item key={`product-${index}`}  >
                                                 <TypeProduct name={item} />
                                             </Menu.Item>
                                         </div>

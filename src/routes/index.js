@@ -13,6 +13,7 @@ import { PaymentPage } from '../pages/PaymentPage/PaymentPage'
 import { OrderSuccessPage } from "../pages/OrderSuccessPage/OrderSuccessPage";
 import { MyOrderPage } from "../pages/MyOrderPage/MyOrderPage";
 import { MyOrderDetailsPage } from "../pages/MyOrderDetailsPage/MyOrderDetailsPage";
+import { SalesProduct } from "../pages/SalesProduct/SalesProduct";
 export const routes = [
     {
         path: '/',
@@ -47,6 +48,12 @@ export const routes = [
     {
         path: '/product',
         page: ProductPage,
+        isShowHeader: true
+
+    },
+    {
+        path: '/product-sales',
+        page: SalesProduct,
         isShowHeader: true
     },
     {

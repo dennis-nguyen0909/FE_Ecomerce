@@ -14,6 +14,7 @@ import { useDebounce } from '../../hooks/useDebounce'
 import LoadingComponent from '../../component/LoadingComponent/LoadingComponent'
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Space } from 'antd';
+import { useNavigate } from 'react-router-dom'
 
 export const HomePage = () => {
     // const arr = ['About Us', 'Cửa Hàng', 'Giảm giá', 'Liên hệ', 'Chăm sóc khách hàng']
@@ -56,6 +57,10 @@ export const HomePage = () => {
     useEffect(() => {
         fetchTypeProduct();
     }, [])
+    const navigate = useNavigate();
+    const handleNavigatePageSales = () => {
+        navigate('/product-sales')
+    }
     return (
         <div>
             <WrapperDivNav className='navBar'>
@@ -67,7 +72,8 @@ export const HomePage = () => {
                     </Dropdown>
                 </div>
                 <div>
-                    <WrapperDivTextHover style={{ color: 'rgb(255,116,109)' }}>Giảm Giá</WrapperDivTextHover>
+                    <WrapperDivTextHover style={{ color: 'rgb(255,116,109)' }}
+                        onClick={handleNavigatePageSales}>Giảm Giá</WrapperDivTextHover>
                 </div>
 
                 <div>

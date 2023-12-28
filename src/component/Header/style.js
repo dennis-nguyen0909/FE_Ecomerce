@@ -138,3 +138,18 @@ export const WrapperDivProduct = styled.div`
       }
 
 `
+export const WrapperSearch = styled.div`
+@media (max-width:767px){
+    .searchPc{
+        display:none;
+    }
+    .searchMobile{
+        display:block;
+    }
+}
+@media (min-width:767px){
+    .searchMobile{
+        display:none;
+    }
+}
+`

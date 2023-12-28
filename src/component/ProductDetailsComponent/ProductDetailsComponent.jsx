@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Image, InputNumber, Rate, Row, message } from 'antd'
-import { StyleCol, WrapperAddressProduct, WrapperButtonQuality, WrapperDiv, WrapperImageColSmall, WrapperImageSmall, WrapperInputNumber, WrapperPriceProduct, WrapperPriceTextProduct, WrapperQualityBtn, WrapperQualityProduct, WrapperRow, WrapperRowMobile, WrapperStyleNameProduct, WrapperStyleTextSell } from './style'
+import { StyleCol, WrapperAddressProduct, WrapperButtonQuality, WrapperDiv, WrapperDivContainer, WrapperImageSmall, WrapperInputNumber, WrapperPriceProduct, WrapperPriceTextProduct, WrapperQualityBtn, WrapperQualityProduct, WrapperRow, WrapperRowMobile, WrapperStyleNameProduct, WrapperStyleTextSell } from './style'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { ButtonComponent } from '../ButtonComponent/ButtonComponent'
 import * as ProductService from '../../services/ProductService'
@@ -83,7 +83,7 @@ export const ProductDetailsComponent = ({ idProduct }) => {
         initFacebookSDK();
     }, [])
     return (
-        <>
+        <WrapperDivContainer>
             <WrapperDiv>
                 <WrapperRow className='rowPc'>
                     <Col span={10} style={{ borderRight: '1px solid #solid', paddingRight: '8px' }}>
@@ -188,10 +188,9 @@ export const ProductDetailsComponent = ({ idProduct }) => {
                         dataHref={process.env.REACT_APP_IS_LOCAL ? "https://developers.facebook.com/docs/plugins/comments#configurator" : window.location.href}
                         width={1200} />
                 </div>
-
             </WrapperDiv >
-            <Row gutter={16} style={{ width: '270px' }} >
-                <StyleCol span={24}>
+            <div className='mobile' >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
                     <h1 style={{ fontSize: '16px' }}>{productDetail?.name}</h1>
                     <div
                         style={{ borderRadius: '60px' }}>
@@ -202,13 +201,10 @@ export const ProductDetailsComponent = ({ idProduct }) => {
                             preview={false}
                             width={'100%'}
                             height={'300px'}
-                            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                        // style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                         />
-
                     </div>
-                    <div>
-                        <h1 style={{ fontSize: '14px' }}>Giá :{covertPrice(productDetail?.price)}</h1>
-                    </div>
+                    <h1 style={{ fontSize: '14px' }}>Giá :{covertPrice(productDetail?.price)}</h1>
                     <div>
                         <Form.Item
                             // label="Chọn Size"
@@ -234,44 +230,47 @@ export const ProductDetailsComponent = ({ idProduct }) => {
 
                                 </WrapperQualityProduct>
                             </div>
-                            <p>Size</p>
-                            <p>{productDetail?.size.map((item) => {
-                                return (
-                                    <>
-                                        <Button key={item} style={{
-                                            padding: '0 10px', margin: '10px 10px',
-                                            // backgroundColor: selectedSize == item ? "red" : '#fff',
-                                            border: selectedSize == item ? "2px solid black" : "1px solid #ccc"
+                            <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+                                <p>Size</p>
+                                <p>{productDetail?.size.map((item) => {
+                                    return (
+                                        <>
+                                            <Button key={item} style={{
+                                                padding: '0 10px', margin: '10px 10px',
+                                                // backgroundColor: selectedSize == item ? "red" : '#fff',
+                                                border: selectedSize == item ? "2px solid black" : "1px solid #ccc"
 
-                                        }} onClick={() => onChangeSize(item)} >{item}</Button>
-                                    </>
-                                )
-                            })}</p>
+                                            }} onClick={() => onChangeSize(item)} >{item}</Button>
+                                        </>
+                                    )
+                                })}</p>
+                            </div>
 
                         </Form.Item>
-                        <ButtonComponent
-                            onClick={handleOrderProduct}
-                            size={'40'}
-                            styleButton={{
-                                backgroundColor: "rgb(71,71,76)",
-                                height: '48px',
-                                width: '220px',
-                                border: 'none',
-                                borderRadius: "12px"
-                            }}
-                            textButton={"Chọn Mua"}
-                            styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
-                        >
-                        </ButtonComponent>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <ButtonComponent
+                                onClick={handleOrderProduct}
+                                size={'40'}
+                                styleButton={{
+                                    backgroundColor: "rgb(71,71,76)",
+                                    height: '48px',
+                                    width: '220px',
+                                    border: 'none',
+                                    borderRadius: "12px"
+                                }}
+                                textButton={"Chọn Mua"}
+                                styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
+                            >
+                            </ButtonComponent>
+                        </div>
                     </div>
+                </div>
 
-                </StyleCol >
-
-            </Row >
+            </div >
             {/* <WrapperRowMobile >
                 <h1 style={{ fontSize: '16px' }}>{productDetail?.name}</h1>
                 <img className='productImage' src={productDetail?.image}></img>
             </WrapperRowMobile> */}
-        </>
+        </WrapperDivContainer>
     )
 }

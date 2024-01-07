@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { TypeProduct } from '../../component/TypeProduct/TypeProduct'
-import { WrapperButtonMore, WrapperDivNav, WrapperDivTextHover, WrapperProduct, WrapperTypeProduct } from './style'
+import { WrapperButtonMore, WrapperDivNav, WrapperDivTextHover, WrapperProduct, WrapperDiv } from './style'
 import { SliderComponent } from '../../component/SliderComponent/SliderComponent'
-import slider1 from '../../assets/images/slider1.jpg'
-import slider2 from '../../assets/images/slider2.jpg'
-import slider3 from '../../assets/images/slider3.jpg'
-import slider4 from '../../assets/images/slider4.jpg'
+import slider1 from '../../assets/images/1.jpeg'
+import slider2 from '../../assets/images/2.jpeg'
+import slider3 from '../../assets/images/3.jpeg'
+import slider4 from '../../assets/images/4.jpeg'
+import slider5 from '../../assets/images/5.jpeg'
+import slider6 from '../../assets/images/6.jpeg'
 import { CardComponent } from '../../component/CardComponent/CardComponent'
 import * as ProductService from '../../services/ProductService'
 import { useQueries, useQuery } from '@tanstack/react-query'
@@ -62,7 +64,7 @@ export const HomePage = () => {
         navigate('/product-sales')
     }
     return (
-        <div>
+        <WrapperDiv>
             <WrapperDivNav className='navBar'>
                 <div>
                     <Dropdown overlay={menuTypeProducts} placement="bottom">
@@ -88,7 +90,7 @@ export const HomePage = () => {
             </WrapperDivNav >
             <div className='body' style={{ width: '100%', backgroundColor: "#fff" }}>
                 <div id="container" style={{ height: 'fit-content' }}>
-                    <SliderComponent arrImages={[slider1, slider2, slider3, slider4]} />
+                    <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5, slider6]} />
                     <div style={{
                         display: 'flex', justifyContent: 'center',
                         alignItems: 'center', margin: '20px 0', fontSize: '30px',
@@ -126,12 +128,15 @@ export const HomePage = () => {
                                     styleTextButton={{ fontWeight: '500' }} onClick={handleLoadMore}
                                 />)
                                 : (
-                                    < WrapperButtonMore type={'outline'} textButton={'Trở về'} styleButton={{
-                                        border: '1px solid #ccc', color: 'black', width: '240px',
-                                        height: '38px', borderRadius: '4px',
-                                    }}
-                                        styleTextButton={{ fontWeight: '500' }} onClick={handleReset}
-                                    />)
+                                    // < WrapperButtonMore type={'outline'} textButton={'Trở về'} styleButton={{
+                                    //     border: '1px solid #ccc', color: 'black', width: '240px',
+                                    //     height: '38px', borderRadius: '4px',
+                                    // }}
+                                    //     styleTextButton={{ fontWeight: '500' }} onClick={handleReset}
+                                    // />
+                                    <>
+                                    </>
+                                )
                             }
                         </div>
                     </LoadingComponent>
@@ -139,6 +144,6 @@ export const HomePage = () => {
                 </div>
 
             </div>
-        </div >
+        </WrapperDiv >
     )
 }

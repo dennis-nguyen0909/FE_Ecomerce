@@ -96,7 +96,7 @@ export const TypeProductPage = () => {
         const windowHeight = window.innerHeight || document.documentElement.clientHeight;
         const documentHeight = document.documentElement.scrollHeight;
         // Kiểm tra xem người dùng đã cuộn xuống cuối chưa
-        if (scrollY + windowHeight >= documentHeight - 100) {
+        if (scrollY + windowHeight >= documentHeight - 800) {
             // Tải thêm sản phẩm với giới hạn tăng lên
             const newLimit = panigate.limit + 4;
             fetchProductType(location.state, panigate.page, newLimit);

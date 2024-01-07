@@ -210,7 +210,7 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 <DribbbleOutlined style={{ color: '#fff', }} />
             </div>
             <WrapperHeader className='header'>
-                <Col onClick={() => navigate('/')} span={10}>
+                <Col style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => navigate('/')} span={10}>
                     <WrapperLogoHeader className='logo-header'>
                         Sneaker Asia
                     </WrapperLogoHeader>
@@ -240,8 +240,7 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                     </div>
 
                                 }
-
-                                <div className='hidden-on-mobile' style={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                <div className='hidden-on-mobile' style={{ display: 'flex', justifyContent: "center", alignItems: "center", marginLeft: '10px' }}>
                                     {!isHiddenCart && (
                                         <>
                                             <WrapperIcon>
@@ -249,7 +248,6 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                                     <ShoppingCartOutlined style={{ fontSize: "20px" }} onClick={showDrawerCart} />
                                                 </Badge>
                                             </WrapperIcon>
-                                            {/* <WrapperTextSmall>Giỏ Hàng</WrapperTextSmall> */}
                                         </>
                                     )}
                                 </div>

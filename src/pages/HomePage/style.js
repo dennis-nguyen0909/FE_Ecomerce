@@ -76,3 +76,6 @@ export const WrapperDivNav = styled.div`
         
     }
 `
+export const WrapperDiv = styled.div`
+
+`

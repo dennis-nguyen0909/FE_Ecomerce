@@ -3,7 +3,7 @@ import { Col, Image, Row } from 'antd'
 import styled from 'styled-components'
 export const WrapperHeader = styled(Row)`
     border-bottom:1px solid #ccc;
-    padding: 15px 120px;
+    padding: 15px 0px;
     // background-color: rgb(128, 128, 128);
     align-items:center;
     gap:16px;
@@ -21,7 +21,6 @@ export const WrapperText = styled.span`
 
 `
 export const WrapperLogoHeader = styled.div`
-    margin-left:140px;
     cursor:pointer;
     max-width:200px;
     background-color: black;

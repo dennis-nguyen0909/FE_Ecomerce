@@ -13,11 +13,11 @@ export const SliderComponent = ({ arrImages }) => {
         autoplaySpeed: 2000
     };
     return (
-        <div>
+        <div className="ant-carousel">
             <WrapperSliderStyle {...settings} >
                 {arrImages.map((image) => {
                     return (
-                        <Image key={image} src={image} alt="slider" preview={false} width="100%" height="600px" style={{ objectFit: 'cover' }} />
+                        <Image key={image} src={image} alt="slider" preview={false} width="100%" height="600px" style={{ objectFit: 'cover', imageRendering: 'optimizeQuality' }} />
                     )
                 })}
             </WrapperSliderStyle>

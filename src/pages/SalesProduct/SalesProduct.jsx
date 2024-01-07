@@ -33,16 +33,26 @@ export const SalesProduct = () => {
         navigate(`/product-detail/${id}`)
     }
     const loadMore = () => {
+        const currentScroll = window.scrollY
         setLimit((prev) => prev + 4)
+        window.scrollTo(0, currentScroll);
+
     }
     // const handleScroll = () => {
     //     const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
     //     const windowHeight = window.innerHeight || document.documentElement.clientHeight;
     //     const documentHeight = document.documentElement.scrollHeight;
+
     //     // Kiểm tra xem người dùng đã cuộn xuống cuối chưa
-    //     if (scrollY + windowHeight >= documentHeight - 100) {
+    //     if (scrollY + windowHeight >= documentHeight - 800) {
+    //         // Lưu lại vị trí cuộn hiện tại
+    //         const currentScrollY = window.scrollY;
+
     //         // Tải thêm sản phẩm với giới hạn tăng lên
-    //         loadMore()
+    //         setLimit((prev) => prev + 4);
+
+    //         // Khôi phục vị trí cuộn sau khi thêm nội dung
+    //         window.scrollTo(0, currentScrollY);
     //     }
     // };
     // useEffect(() => {
@@ -60,13 +70,13 @@ export const SalesProduct = () => {
     const sortedPriceMax = originalData.slice().sort((a, b) => a.price - b.price);
     const countProduct = (filterData || []).length;
     const items = [
-        {
-            key: '1',
-            label: 'Price',
-            children: <p>
-                <Checkbox>100-300</Checkbox>
-            </p>,
-        },
+        // {
+        //     key: '1',
+        //     label: 'Price',
+        //     children: <p>
+        //         <Checkbox>100-300</Checkbox>
+        //     </p>,
+        // },
     ]
     return (
         <WrapperDiv>
@@ -209,7 +219,7 @@ export const SalesProduct = () => {
                         {products?.totalPage === 1 ?
                             <></>
                             :
-                            <Button style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} onClick={loadMore}>Xem thêm</Button>
+                            <Button style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto' }} onClick={loadMore}>Xem thêm</Button>
 
                         }
                     </div>

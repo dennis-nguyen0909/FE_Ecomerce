@@ -61,5 +61,11 @@ export const getCountOrderByType = async (access_token) => {
     });
     return res.data;
 }
+export const confirmOrder = async (id) => {
+    const res = await axios.put(`${process.env.REACT_APP_API}order/confirm-order/${id}`);
+    return res.data;
+}
+
+
 
 

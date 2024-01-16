@@ -22,10 +22,10 @@ export const Footer = () => {
                     <div>
                         <h2>Sneaker Asia</h2>
                         <div style={{ display: 'flex', fontSize: '24px', color: '#fff', gap: '10px', alignContent: 'center', justifyContent: 'center' }}>
-                            <a style={{}} href='https://www.facebook.com/profile.php?id=61555040744458'>
+                            <a style={{ color: '#fff' }} href='https://www.facebook.com/profile.php?id=61555040744458'>
                                 <FacebookFilled />
                             </a>
-                            <a style={{ color: '#833ab4' }}>
+                            <a style={{ color: '#fff' }}>
                                 <InstagramFilled />
                             </a>
                         </div>

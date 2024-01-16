@@ -395,7 +395,10 @@ export const AdminUser = () => {
     const dataTable = users?.data?.map((user) => ({
         ...user,
         key: user._id,
-        isAdmin: user?.isAdmin ? "TRUE" : "FALSE"
+        isAdmin: user?.isAdmin ? "TRUE" : "FALSE",
+        name: user?.name ? user?.name : "NULL",
+        phone: user?.phone ? user?.phone : "NULL",
+        address: user?.address ? user?.address : "NULL"
 
     })) || [];
 

@@ -235,7 +235,7 @@ export const PaymentPage = () => {
         <WrapperDivPayment>
             <div className='paymentPc'>
                 <Row style={{ marginTop: '80px' }} >
-                    <Col span={12} style={{ width: 'fit-content' }}>
+                    <Col span={12} style={{ width: 'fit-content', paddingLeft: '20px' }}>
                         <Form
                             form={formModal}
                         >
@@ -315,7 +315,7 @@ export const PaymentPage = () => {
                             {/* </LoadingComponent> */}
                         </Form>
                     </Col>
-                    <Col span={12} style={{ borderLeft: '1px solid #ccc', height: '500px' }}>
+                    <Col span={12} style={{ borderLeft: '1px solid #ccc', height: '500px', paddingLeft: '20px' }}>
                         <div>
                             <h1>Chọn phương thức giao hàng</h1>
                             <Radio.Group onChange={handleDelivery} value={delivery}>

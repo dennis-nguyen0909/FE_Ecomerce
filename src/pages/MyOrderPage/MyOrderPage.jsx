@@ -3,7 +3,7 @@ import * as OrderService from '../../services/OrderService'
 import { useSelector } from 'react-redux'
 import { useFetcher, useNavigate } from 'react-router-dom'
 import { QueryClient, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, Image, Modal, message } from 'antd'
+import { Button, Image, Modal, Skeleton, message } from 'antd'
 import { WrapperDiv, WrapperDivButton, WrapperDivItems, WrapperDivOrder } from './style'
 import { covertPrice } from '../../untils'
 import LoadingComponent from '../../component/LoadingComponent/LoadingComponent'
@@ -99,7 +99,8 @@ export const MyOrderPage = () => {
                     <h3>Đơn hàng đã mua</h3>
                 </div>
                 <div>
-                    {Array.isArray(data) && data?.map((item) => {
+
+                    {Array.isArray(data) ? data?.map((item) => {
                         return (
                             <>
                                 <WrapperDiv key={item?._id}>
@@ -126,7 +127,7 @@ export const MyOrderPage = () => {
 
                             </>
                         )
-                    })}
+                    }) : <Skeleton active />}
 
                 </div>
             </div >
@@ -136,7 +137,7 @@ export const MyOrderPage = () => {
                 </div>
                 <LoadingComponent isLoading={loading} >
                     <div>
-                        {Array.isArray(data) && data?.map((item) => {
+                        {Array.isArray(data) ? data?.map((item) => {
                             return (
                                 <>
                                     <div style={{ padding: '0 40px', borderTop: '1px dashed #ccc', margin: '10px 0' }}>
@@ -164,7 +165,7 @@ export const MyOrderPage = () => {
                                     </div>
                                 </>
                             )
-                        })}
+                        }) : <Skeleton active />}
                     </div>
                 </LoadingComponent>
             </div>

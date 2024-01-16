@@ -91,13 +91,13 @@ export const ProductDetailsComponent = ({ idProduct }) => {
                     </Col >
                     <Col span={14} style={{ padding: ' 0 40px' }}>
                         <WrapperStyleNameProduct>{productDetail?.name}</WrapperStyleNameProduct>
+                        <WrapperPriceProduct>
+                            <WrapperPriceTextProduct> Giá :{covertPrice(productDetail?.price)}</WrapperPriceTextProduct>
+                        </WrapperPriceProduct>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <Rate allowHalf defaultValue={productDetail?.rating} />
+                            {/* <Rate allowHalf defaultValue={productDetail?.rating} /> */}
                             <WrapperStyleTextSell>Đã bán {productDetail?.selled || 0}</WrapperStyleTextSell>
                         </div>
-                        <WrapperPriceProduct>
-                            <WrapperPriceTextProduct>{covertPrice(productDetail?.price)}</WrapperPriceTextProduct>
-                        </WrapperPriceProduct>
                         {/* <WrapperAddressProduct>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <span style={{ paddingRight: '20px' }}>Giao đến:</span>
@@ -107,7 +107,7 @@ export const ProductDetailsComponent = ({ idProduct }) => {
                         <span className='change-address'> Đổi địa chỉ</span>
 
                     </WrapperAddressProduct> */}
-                        <LikeButtonComentFB dataHref={process.env.REACT_APP_IS_LOCAL ? "https://developers.facebook.com/docs/plugins/" : window.location.href} />
+                        {/* <LikeButtonComentFB dataHref={process.env.REACT_APP_IS_LOCAL ? "https://developers.facebook.com/docs/plugins/" : window.location.href} /> */}
                         <div>
                             <span>HÀNG CÒN SẴN: {productDetail?.countInStock}</span>
                         </div>
@@ -154,17 +154,17 @@ export const ProductDetailsComponent = ({ idProduct }) => {
                                 onClick={handleOrderProduct}
                                 size={'40'}
                                 styleButton={{
-                                    backgroundColor: "rgb(255,57,69)",
+                                    backgroundColor: "rgb(71,71,76)",
                                     height: '48px',
-                                    width: '220px',
+                                    width: '400px',
                                     border: 'none',
                                     borderRadius: "12px"
                                 }}
-                                textButton={"Chọn Mua"}
+                                textButton={"Thêm vào giỏ"}
                                 styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
                             >
                             </ButtonComponent>
-                            <ButtonComponent
+                            {/* <ButtonComponent
 
                                 size={'40'}
                                 styleButton={{
@@ -178,7 +178,7 @@ export const ProductDetailsComponent = ({ idProduct }) => {
                                 styleTextButton={{ color: "rgb(13,92,182)", fontSize: "15px" }}
 
                             >
-                            </ButtonComponent>
+                            </ButtonComponent> */}
                         </div>
                     </Col>
 
@@ -258,7 +258,7 @@ export const ProductDetailsComponent = ({ idProduct }) => {
                                     border: 'none',
                                     borderRadius: "12px"
                                 }}
-                                textButton={"Chọn Mua"}
+                                textButton={"Thêm vào giỏ"}
                                 styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
                             >
                             </ButtonComponent>

@@ -6,7 +6,7 @@ export const WrapperProduct = styled.div`
     display:flex;
     justify-content:center;
     gap:20px;
-
+    padding-bottom:50px;
     flex-wrap:wrap;
     width:100%;
 `

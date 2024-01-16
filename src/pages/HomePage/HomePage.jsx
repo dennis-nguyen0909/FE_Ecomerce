@@ -15,8 +15,9 @@ import { useSelector } from 'react-redux'
 import { useDebounce } from '../../hooks/useDebounce'
 import LoadingComponent from '../../component/LoadingComponent/LoadingComponent'
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
-import { Dropdown, Menu, Space } from 'antd';
+import { Dropdown, Menu, Skeleton, Space } from 'antd';
 import { useNavigate } from 'react-router-dom'
+import { Footer } from '../../component/Footer/Footer'
 
 export const HomePage = () => {
     // const arr = ['About Us', 'Cửa Hàng', 'Giảm giá', 'Liên hệ', 'Chăm sóc khách hàng']
@@ -49,7 +50,41 @@ export const HomePage = () => {
         setLimit(3)
     }
 
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(1); // Bắt đầu từ trang đầu tiên
+    const [product2, setProduct2] = useState([]);
+    const elementRef = useRef(null);
 
+    function onIntersection(entries) {
+        const firstEntry = entries[0];
+        if (firstEntry.isIntersecting && hasMore) {
+            fetchMoreProduct();
+        }
+    }
+
+    const fetchMoreProduct = async () => {
+        const search = '';
+        const res = await ProductService.getAllProduct(search, page, limit); // Chuyển trang vào API
+        if (res.totalPage === 1) {
+            setHasMore(false);
+        } else {
+            setProduct2((prev) => [prev, ...res.data]);
+            setPage((prev) => prev + 1); // Tăng số trang
+        }
+    }
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(onIntersection);
+        if (observer && elementRef.current) {
+            observer.observe(elementRef.current);
+        }
+
+        return () => {
+            if (observer) {
+                observer.disconnect();
+            }
+        };
+    }, [product2]); // Thêm page vào dependency array để useEffect cập nhật khi page thay đổi
     const fetchTypeProduct = async () => {
         const res = await ProductService.getAllTypeProduct();
         if (res?.status === 'Ok') {
@@ -63,87 +98,84 @@ export const HomePage = () => {
     const handleNavigatePageSales = () => {
         navigate('/product-sales')
     }
+
     return (
-        <WrapperDiv>
-            <WrapperDivNav className='navBar'>
-                <div>
-                    <Dropdown overlay={menuTypeProducts} placement="bottom">
-                        <WrapperDivTextHover style={{ cursor: 'pointer' }}>
-                            Sản Phẩm
+        <>
+            <WrapperDiv>
+                <WrapperDivNav className='navBar'>
+                    <div>
+                        <Dropdown overlay={menuTypeProducts} placement="bottom">
+                            <WrapperDivTextHover style={{ cursor: 'pointer' }}>
+                                Sản Phẩm
+                            </WrapperDivTextHover>
+                        </Dropdown>
+                    </div>
+                    <div>
+                        <WrapperDivTextHover style={{ color: 'rgb(255,116,109)' }}
+                            onClick={handleNavigatePageSales}>Giảm Giá</WrapperDivTextHover>
+                    </div>
+
+                    <div>
+                        <WrapperDivTextHover>
+                            Chăm Sóc Khách Hàng
                         </WrapperDivTextHover>
-                    </Dropdown>
-                </div>
-                <div>
-                    <WrapperDivTextHover style={{ color: 'rgb(255,116,109)' }}
-                        onClick={handleNavigatePageSales}>Giảm Giá</WrapperDivTextHover>
-                </div>
+                    </div>
+                    <div>
 
-                <div>
-                    <WrapperDivTextHover>
-                        Chăm Sóc Khách Hàng
-                    </WrapperDivTextHover>
+                        <WrapperDivTextHover>Bộ sưu tập</WrapperDivTextHover>
+                    </div>
+                </WrapperDivNav >
+                <div className='body' style={{ width: '100%', backgroundColor: "#fff" }}>
+                    <div id="container" style={{ height: 'fit-content' }}>
+                        <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5, slider6]} />
+                        <div style={{
+                            display: 'flex', justifyContent: 'center',
+                            alignItems: 'center', margin: '20px 0', fontSize: '30px',
+                        }}>Sản Phẩm Mới</div>
+
+                        <LoadingComponent isLoading={isLoading}>
+                            <WrapperProduct>
+                                {product2 ? (
+                                    product2?.map((product) => (
+
+                                        <CardComponent
+                                            id={product._id}
+                                            key={product._id}
+                                            countInStock={product.countInStock}
+                                            description={product.description}
+                                            image={product.image}
+                                            name={product.name}
+                                            price={product.price}
+                                            rating={product.rating}
+                                            type={product.type}
+                                            discount={product.discount}
+                                            selled={product.selled}
+                                        />
+                                    ))
+                                ) : (
+                                    <p>No products available</p>
+                                )}
+                                {hasMore && <div ref={elementRef} style={{ width: '100%', height: '80px' }}><Skeleton active /></div>}
+                            </WrapperProduct>
+                            {/* <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '15px 0' }}>
+                                {products?.total !== products?.data.length || !products?.totalPage === 1 ? (
+                                    < WrapperButtonMore type={'outline'} textButton={'Xem thêm'} styleButton={{
+                                        border: '1px solid #ccc', color: 'black', width: '240px',
+                                        height: '38px', borderRadius: '4px',
+                                    }}
+                                        styleTextButton={{ fontWeight: '500' }} onClick={handleLoadMore}
+                                    />)
+                                    : (
+                                        <>
+                                        </>
+                                    )
+                                }
+                            </div> */}
+                        </LoadingComponent>
+                    </div>
                 </div>
-                <div>
-
-                    <WrapperDivTextHover>Bộ sưu tập</WrapperDivTextHover>
-                </div>
-            </WrapperDivNav >
-            <div className='body' style={{ width: '100%', backgroundColor: "#fff" }}>
-                <div id="container" style={{ height: 'fit-content' }}>
-                    <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5, slider6]} />
-                    <div style={{
-                        display: 'flex', justifyContent: 'center',
-                        alignItems: 'center', margin: '20px 0', fontSize: '30px',
-                    }}>Sản Phẩm Mới</div>
-
-                    <LoadingComponent isLoading={isLoading}>
-                        <WrapperProduct>
-                            {products?.data ? (
-                                products?.data.map((product) => (
-
-                                    <CardComponent
-                                        id={product._id}
-                                        key={product._id}
-                                        countInStock={product.countInStock}
-                                        description={product.description}
-                                        image={product.image}
-                                        name={product.name}
-                                        price={product.price}
-                                        rating={product.rating}
-                                        type={product.type}
-                                        discount={product.discount}
-                                        selled={product.selled}
-                                    />
-                                ))
-                            ) : (
-                                <p>No products available</p>
-                            )}
-                        </WrapperProduct>
-                        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '15px 0' }}>
-                            {products?.total !== products?.data.length || !products?.totalPage === 1 ? (
-                                < WrapperButtonMore type={'outline'} textButton={'Xem thêm'} styleButton={{
-                                    border: '1px solid #ccc', color: 'black', width: '240px',
-                                    height: '38px', borderRadius: '4px',
-                                }}
-                                    styleTextButton={{ fontWeight: '500' }} onClick={handleLoadMore}
-                                />)
-                                : (
-                                    // < WrapperButtonMore type={'outline'} textButton={'Trở về'} styleButton={{
-                                    //     border: '1px solid #ccc', color: 'black', width: '240px',
-                                    //     height: '38px', borderRadius: '4px',
-                                    // }}
-                                    //     styleTextButton={{ fontWeight: '500' }} onClick={handleReset}
-                                    // />
-                                    <>
-                                    </>
-                                )
-                            }
-                        </div>
-                    </LoadingComponent>
-                    {/* <NavbarComponent /> */}
-                </div>
-
-            </div>
-        </WrapperDiv >
+            </WrapperDiv >
+            <Footer />
+        </>
     )
 }

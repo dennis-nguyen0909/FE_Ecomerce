@@ -2,7 +2,7 @@ import { Button, Form, Input, Select, Space, message } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { TableComponent } from '../TableComponent/TableComponent'
 import { InputComponent } from '../InputComponent/InputComponent';
-import { getBase64 } from '../../untils';
+import { covertPrice, getBase64 } from '../../untils';
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 import { useMutationHook } from '../../hooks/userMutationHook';
 import * as ProductService from '../../services/ProductService'
@@ -388,6 +388,7 @@ export const AdminProduct = () => {
         return {
             ...product,
             key: product._id,
+            price: covertPrice(product?.price)
         }
     })
     const fetchGetDetailProduct = async (rowSelected) => {

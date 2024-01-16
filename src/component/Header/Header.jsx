@@ -142,6 +142,7 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         setSearch(e.target.value)
 
     }
+
     const onClickSearch = (e) => {
         dispatch(searchProduct(search))
         navigate('/search-product')
@@ -377,7 +378,6 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 </div>
                 {order?.orderItems?.length ? order?.orderItems?.map((item) => {
                     return (
-
                         <WrapperDivProduct className='itemProduct' key={item?.product}>
                             <div>
                                 <img width={'130px'} height={'130px'} objectFit={'cover'} src={item.image} />

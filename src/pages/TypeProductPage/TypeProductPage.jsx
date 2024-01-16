@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { NavbarComponent } from '../../component/NavbarComponent/NavbarComponent'
-import { Button, Card, Pagination, Row, Space, Select, Checkbox, Collapse, Skeleton } from 'antd'
+import { Button, Card, Pagination, Row, Space, Select, Checkbox, Collapse, Skeleton, Spin } from 'antd'
 import { WrapperNavbar, WrapperProduct, WrapperRow, WrapperContainer, WrapperSort } from './style'
 import { useLocation, useNavigate } from 'react-router-dom'
 import * as ProductService from '../../services/ProductService'
@@ -10,9 +10,14 @@ import Meta from 'antd/es/card/Meta'
 import { StyleNameProduct, WrapperPriceText } from '../../component/CardComponentPageTypeProduct/style'
 import { covertPrice } from '../../untils'
 import { ButtonComponent } from '../../component/ButtonComponent/ButtonComponent'
+import LoadingComponent from '../../component/LoadingComponent/LoadingComponent'
+import { useDebounce } from '../../hooks/useDebounce'
 export const TypeProductPage = () => {
     const [stateProductType, setStateProductType] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [spin, setSpin] = useState(false)
     const [type, setType] = useState([])
+    const [filterPrice, setFilterPrice] = useState('')
     const navigate = useNavigate()
     const [selectedSort, setSelectedSort] = useState('')
     const [panigate, setPanigate] = useState({
@@ -86,8 +91,10 @@ export const TypeProductPage = () => {
         {
             key: '1',
             label: 'Price',
-            children: <p>
-                <Checkbox>100-300</Checkbox>
+            children: <p onChange={(e) => handleOnChangePrice(e)}>
+                <Checkbox value={"1"}>300.000đ - 500.000đ</Checkbox>
+                <Checkbox value={"2"}>500.000đ - 1.000.000đ</Checkbox>
+                <Checkbox value={"3"}>Trên 1.000.000đ</Checkbox>
             </p>,
         },
     ]
@@ -96,12 +103,18 @@ export const TypeProductPage = () => {
         const windowHeight = window.innerHeight || document.documentElement.clientHeight;
         const documentHeight = document.documentElement.scrollHeight;
         // Kiểm tra xem người dùng đã cuộn xuống cuối chưa
-        if (scrollY + windowHeight >= documentHeight - 800) {
+        if (scrollY + windowHeight >= documentHeight - 700 && !spin && panigate.page < panigate.total) {
+
             // Tải thêm sản phẩm với giới hạn tăng lên
             const newLimit = panigate.limit + 4;
-            fetchProductType(location.state, panigate.page, newLimit);
+            setSpin(true)
+            fetchProductType(location.state, panigate.page, newLimit).then(() => {
+                setSpin(false)
+            });
+
         }
     };
+    const handleScrollDebounce = useDebounce(handleScroll, 2000);
     useEffect(() => {
         // Gắn trình nghe sự kiện cuộn khi thành phần được tạo
         window.addEventListener('scroll', handleScroll);
@@ -111,6 +124,59 @@ export const TypeProductPage = () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, [location.state, panigate.page, panigate.limit]);
+    const handleOnChangePrice = (e) => {
+        const selectedValue = e.target.value
+        setFilterPrice(selectedValue === filterPrice ? '' : selectedValue)
+    }
+    console.log(filterPrice)
+    const sortedProduct300to500 = originalData.filter((item) => item.price >= 300000 && item.price <= 500000)
+    const sortedProduct500to1000 = originalData.filter((item) => item.price >= 500000 && item.price <= 1000000)
+    const sortedProduct1000 = originalData.filter((item) => item.price >= 1000000)
+    const renderProductCard = (product) => (
+        <Card
+            onClick={() => handleDetailProduct(product?._id)}
+            size='small'
+            hoverable={true}
+            style={{ width: 'calc(30% - 10px)', marginBottom: '10px', marginTop: '10px' }}
+            cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
+        >
+            <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
+            <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                {covertPrice(product.price)}
+            </span>
+        </Card>
+    );
+    const getProductsToRender = () => {
+        console.log(selectedSort, filterPrice)
+        if (selectedSort === "sales") {
+            return sortedProducts;
+        } else if (selectedSort === "max") {
+            return sortedPriceMin;
+        } else if (selectedSort === "min") {
+            return sortedPriceMax;
+        } else if (filterPrice === "1") {
+            return sortedProduct300to500;
+        } else if (filterPrice === "2") {
+            return sortedProduct500to1000;
+        } else if (filterPrice === "3") {
+            return sortedProduct1000;
+        }
+        else if (selectedSort === "max" && filterPrice === "1") {
+            return sortedProduct300to500.slice().sort((a, b) => a.price - b.price);
+
+        }
+        else if (selectedSort === "min" && filterPrice === "1") {
+            return sortedProduct300to500.slice().sort((a, b) => b.price - a.price);
+
+        }
+        else if (filterPrice === '') {
+            return sortedProducts;
+        }
+        else {
+            return sortedProducts;
+        }
+    };
+    const productsToRender = getProductsToRender();
     return (
         <>
 
@@ -119,91 +185,55 @@ export const TypeProductPage = () => {
                 <p>/ {location.state}</p>
             </div>
             <WrapperContainer >
-                <WrapperRow className='productPc'>
-                    <WrapperNavbar className='navBarLeft' span={4}>
-                        <NavbarComponent types={type} />
-                        <Collapse style={{ marginRight: '20px', color: 'rgb(56,56,61)', fontSize: '18px', padding: '10px 0', borderBottom: '1px solid #ccc' }} defaultActiveKey={['1']} ghost items={items} />
-                    </WrapperNavbar>
-                    <div>
-                        <WrapperSort>
-                            <p className='textSp'>{countProduct} Sản phẩm</p>
-                            <div className='textSort' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
-                                <p>Sắp xếp</p>
-                                <Select
-                                    defaultValue="Bán chạy nhất"
-                                    style={{
-                                        width: 200,
-                                    }}
-                                    onChange={handleChange}
-                                    options={[
-                                        {
-                                            value: 'sales',
-                                            label: 'Bán chạy nhất',
-                                        },
-                                        {
-                                            value: 'min',
-                                            label: 'Giá thấp đến cao',
-                                        },
-                                        {
-                                            value: 'max',
-                                            label: 'Giá cao đến thấp',
-                                        },
+                <LoadingComponent isLoading={loading} >
+                    <WrapperRow className='productPc'>
+                        <WrapperNavbar className='navBarLeft' span={5}>
+                            {/* <NavbarComponent types={type} /> */}
+                            <Collapse style={{ color: 'rgb(56,56,61)', fontSize: '18px', padding: '10px 0', borderBottom: '1px solid #ccc' }} defaultActiveKey={['1']} ghost items={items} />
+                        </WrapperNavbar>
+                        <div>
+                            <WrapperSort>
+                                <p className='textSp'>{countProduct} Sản phẩm</p>
+                                <div className='textSort' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
+                                    <p>Sắp xếp</p>
+                                    <Select
+                                        defaultValue="Bán chạy nhất"
+                                        style={{
+                                            width: 200,
+                                        }}
+                                        onChange={handleChange}
+                                        options={[
+                                            {
+                                                value: 'sales',
+                                                label: 'Bán chạy nhất',
+                                            },
+                                            {
+                                                value: 'min',
+                                                label: 'Giá thấp đến cao',
+                                            },
+                                            {
+                                                value: 'max',
+                                                label: 'Giá cao đến thấp',
+                                            },
 
-                                    ]}
-                                />
+                                        ]}
+                                    />
+                                </div>
+                            </WrapperSort>
+                            <WrapperProduct className='navBarProduct' span={20}>
+                                {productsToRender?.length === 0
+                                    ? <div style={{ width: '1200px', maxWidth: '1400px', height: '500px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Không tìm thấy sản phẩm nào thõa điều kiện</div>
+                                    :
+                                    productsToRender.map((product) => renderProductCard(product))
+                                }
+                            </WrapperProduct>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <Spin spinning={spin} />
                             </div>
-                        </WrapperSort>
-                        <WrapperProduct className='navBarProduct' span={20}>
-                            {selectedSort === "sales" ? sortedProducts?.map((product) => {
-                                return (
-                                    <Card
-                                        onClick={() => handleDetailProduct(product?._id)}
-                                        size='small'
-                                        hoverable={true}
-                                        style={{ width: 'calc(30% - 10px)', marginBottom: '10px', marginTop: '10px' }}
-                                        cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
-                                    >
-                                        <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
-                                        <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            {covertPrice(product.price)}
-                                        </span>
-                                    </Card>
-                                )
-                            }) : selectedSort === "max" ? sortedPriceMin?.map((product) => {
-                                return (
-                                    <Card
-                                        onClick={() => handleDetailProduct(product?._id)}
-                                        size='small'
-                                        hoverable={true}
-                                        style={{ width: 'calc(30% - 10px)', marginBottom: '10px', marginTop: '10px' }}
-                                        cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
-                                    >
-                                        <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
-                                        <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            {covertPrice(product.price)}
-                                        </span>
-                                    </Card>
-                                )
-                            }) : sortedPriceMax?.map((product) => {
-                                return (
-                                    <Card
-                                        onClick={() => handleDetailProduct(product?._id)}
-                                        size='small'
-                                        hoverable={true}
-                                        style={{ width: 'calc(30% - 10px)', marginBottom: '10px', marginTop: '10px' }}
-                                        cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
-                                    >
-                                        <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
-                                        <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            {covertPrice(product.price)}
-                                        </span>
-                                    </Card>
-                                )
-                            })}
-                        </WrapperProduct>
-                    </div>
+                        </div>
 
-                </WrapperRow>
+                    </WrapperRow>
+                </LoadingComponent>
                 <div className='productMobile' style={{ margin: '10px 0' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '50px', flexWrap: 'wrap' }}>
                         {stateProductType?.length === 0 && <>
@@ -287,13 +317,14 @@ export const TypeProductPage = () => {
                         </ButtonComponent> */}
                     </div>
                 </div>
-                <div className='panigate'>
+
+                {/* <div className='panigate'>
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {panigate?.pageCurrent !== panigate?.total && <Button onClick={handleEndPage}>Cuối Trang </Button>}
                         <Pagination showQuickJumper={panigate?.pageCurrent === panigate?.total ? false : true} pageSize={panigate?.limit} current={panigate.pageCurrent} total={panigate?.total + 10} onChange={onChange} disabled={panigate?.pageCurrent === panigate?.total} />
                         {panigate?.pageCurrent === panigate?.total && <Button onClick={handleReturn}>Trở về </Button>}
                     </div>
-                </div>
+                </div> */}
             </WrapperContainer>
         </>
     )

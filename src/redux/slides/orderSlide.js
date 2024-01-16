@@ -50,12 +50,19 @@ export const orderSlide = createSlice({
             }
         },
         removeOrderProduct: (state, action) => {
-            const idProduct = action.payload
-            const itemOrder = state?.orderItems?.filter((item) => item?.product !== idProduct) // tìm những thằng kh có trong idProduct
-            const selectedItemsOrder = state?.orderItemsSelected?.filter((item) => item?.product !== idProduct) // tìm những thằng kh có trong idProduct
-            state.orderItems = itemOrder
-            state.orderItems = selectedItemsOrder
+            const idProduct = action.payload;
 
+            // Lọc ra những sản phẩm không có idProduct
+            const filteredOrderItems = state?.orderItems?.filter((item) => item?.product !== idProduct);
+
+            // Lọc ra những sản phẩm có idProduct
+            const selectedItemsOrder = state?.orderItemsSelected?.filter((item) => item?.product === idProduct);
+
+            // Cập nhật trạng thái orderItems
+            state.orderItems = filteredOrderItems;
+
+            // Cập nhật trạng thái orderItemsSelected
+            state.orderItemsSelected = selectedItemsOrder;
         },
         removeAllOrderProduct: (state, action) => {
             const { selectedCheck } = action.payload

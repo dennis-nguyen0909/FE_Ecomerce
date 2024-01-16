@@ -58,7 +58,7 @@ export const renderOptions = (arr) => {
 export const covertPrice = (price) => {
     try {
         const results = price.toLocaleString().replaceAll('.', '.')
-        return `${results} VND`
+        return `${results}đ`
     } catch (error) {
         return null
     }

@@ -12,13 +12,12 @@ export const WrapperImageColSmall = styled(Col)`
 
 export const WrapperStyleNameProduct = styled.h1`
     color:rgb(36,36,36);
-    font-size:24px;
-    font-weight:300;
-    line-height:30px;
+    font-size:30px;
+    font-weight:500;
     word-break:break-word;
 `
 export const WrapperStyleTextSell = styled.span`
-    font-size:15px;
+    font-size:18px;
     line-height:24px;
     color:rgb(120,120,120);
 `
@@ -27,12 +26,8 @@ export const WrapperPriceProduct = styled.div`
     border-radius:4px;
 `
 export const WrapperPriceTextProduct = styled.h1`
-    font-size:32px;
-    line-height:40px;
-    margin-right:8px;
+    font-size:18px;
     font-weight:500;
-    padding:10px;
-    margin-top:10px;
 `
 
 export const WrapperAddressProduct = styled.div`

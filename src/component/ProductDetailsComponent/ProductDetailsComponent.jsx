@@ -183,11 +183,11 @@ export const ProductDetailsComponent = ({ idProduct }) => {
                     </Col>
 
                 </WrapperRow >
-                <div className='commentFB'>
+                {/* <div className='commentFB'>
                     <CommentFB
                         dataHref={process.env.REACT_APP_IS_LOCAL ? "https://developers.facebook.com/docs/plugins/comments#configurator" : window.location.href}
                         width={1200} />
-                </div>
+                </div> */}
             </WrapperDiv >
             <div className='mobile' >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>

@@ -98,7 +98,10 @@ export const HomePage = () => {
     const handleNavigatePageSales = () => {
         navigate('/product-sales')
     }
-
+    const handleNavigatePageSupport = () => {
+        navigate('/support')
+    }
+    console.log(product2)
     return (
         <>
             <WrapperDiv>
@@ -116,7 +119,7 @@ export const HomePage = () => {
                     </div>
 
                     <div>
-                        <WrapperDivTextHover>
+                        <WrapperDivTextHover onClick={handleNavigatePageSupport}>
                             Chăm Sóc Khách Hàng
                         </WrapperDivTextHover>
                     </div>

@@ -1,4 +1,4 @@
-import { Card } from 'antd'
+import { Card, Slider } from 'antd'
 import Meta from 'antd/es/card/Meta'
 import React from 'react'
 import { StyleNameProduct, WrapperCardStyle, WrapperDiscountText, WrapperPriceText, WrapperReportText } from './style'
@@ -26,7 +26,7 @@ export const CardComponent = (props) => {
                     <span>{rating}</span>
                     <StarFilled style={{ fontSize: "12px", color: "yellow" }} />
                 </span>
-                <span>Đã bán | 100+</span>
+                {selled > 0 ? <span>Đã bán {selled}</span> : <span>Đã bán 0</span>}
             </WrapperReportText>
             <WrapperPriceText>
                 <span style={{ marginRight: '10px' }}>

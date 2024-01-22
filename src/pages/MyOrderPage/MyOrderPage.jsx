@@ -101,6 +101,7 @@ export const MyOrderPage = () => {
                 <div>
 
                     {Array.isArray(data) ? data?.map((item) => {
+                        console.log('data', data.map((item) => item))
                         return (
                             <>
                                 <WrapperDiv key={item?._id}>
@@ -108,18 +109,27 @@ export const MyOrderPage = () => {
                                         <h4>Trạng thái</h4>
                                         <div style={{ display: 'flex' }}>
                                             <p style={{ color: 'red' }}>Giao hàng :</p>
-                                            <p>Chưa giao hàng</p>
+                                            <p>{item.isDelivered === true ? "Đã giao thành công" : "Chưa giao thành công"}</p>
                                         </div>
                                         <div style={{ display: 'flex' }}>
                                             <p style={{ color: 'red' }}>Thanh toán :</p>
-                                            <p>{item?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}</p>
+                                            <p>{item?.isPaid || item?.isDelivered === true ? "Đã thanh toán" : "Chưa thanh toán"}</p>
                                         </div>
                                     </div>
                                     {renderMyOrder(item?.orderItems)}
                                     <WrapperDivButton>
                                         <p>TỔNG TIỀN: {covertPrice(item?.totalPrice)} </p>
                                         <div style={{ display: 'flex', gap: '20px' }} >
-                                            <Button onClick={() => handleCancelProduct(item)}>Hủy đơn hàng</Button>
+
+                                            {item?.status === "Pending" ?
+                                                <Button onClick={() => handleCancelProduct(item)}>Hủy đơn hàng</Button>
+                                                : item.isDelivered === true ? <>
+                                                    <Button>Đã giao thành công
+                                                    </Button>
+                                                </> : <Button>Đơn hàng đang giao
+                                                </Button>
+                                            }
+
                                             <Button onClick={() => handleNavigatePageOrderDetails(item?._id)}>Xem chi tiết</Button>
                                         </div>
                                     </WrapperDivButton>
@@ -158,6 +168,7 @@ export const MyOrderPage = () => {
                                         <WrapperDivButton>
                                             <p>TỔNG TIỀN: {covertPrice(item?.totalPrice)} </p>
                                             <div style={{ display: 'flex', gap: '20px' }} >
+                                                { }
                                                 <Button onClick={() => handleCancelProduct(item)}>Hủy đơn hàng</Button>
                                                 <Button onClick={() => handleNavigatePageOrderDetails(item?._id)}>Xem chi tiết</Button>
                                             </div>

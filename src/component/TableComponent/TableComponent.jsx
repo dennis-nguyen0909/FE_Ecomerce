@@ -53,6 +53,7 @@ export const TableComponent = (props) => {
             <div>
                 <LoadingComponent isLoading={isLoading}>
                     <Table
+
                         ref={tableRef}
                         key={forceRender} // Key được cập nhật để kích hoạt render lại component khi state thay đổi
                         rowSelection={{

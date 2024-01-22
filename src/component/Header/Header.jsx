@@ -22,6 +22,7 @@ import { decreaseAmount, increaseAmount, removeOrderProduct } from '../../redux/
 import { covertPrice } from '../../untils'
 import { TypeProduct } from '../TypeProduct/TypeProduct'
 // import slider4 from '../../assets/images/slider4.jpg'
+import * as SearchService from '../../services/SearchService'
 export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const location = useLocation()
     const order = useSelector((state) => state.order)
@@ -33,6 +34,7 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const [typeProduct, setTypeProduct] = useState([])
     const [current, setCurrent] = useState('1');
     const [theme, setTheme] = useState('light');
+    const [history, setHistory] = useState([])
     const changeTheme = (value) => {
         setTheme(value ? 'dark' : 'light');
     };
@@ -142,10 +144,14 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         setSearch(e.target.value)
 
     }
-
+    const fetchSearch = async (search) => {
+        const res = await SearchService.createSearch(search);
+        console.log(res)
+    }
     const onClickSearch = (e) => {
         dispatch(searchProduct(search))
         navigate('/search-product')
+        fetchSearch(search)
         setOpenSearch(false)
         setSearch('');
     }
@@ -205,6 +211,13 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const handleNavigatePageSales = () => {
         navigate('/product-sales')
     }
+    const getAllSearch = async () => {
+        const res = await SearchService.getAllSearch();
+        setHistory(res.response.searchHistory)
+    }
+    useEffect(() => {
+        getAllSearch();
+    }, [search])
     return (
         <WrapperDiv>
             <div style={{ backgroundColor: 'black', height: '30px', display: 'flex', alignItems: 'center', paddingLeft: '40px' }}>
@@ -331,6 +344,18 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                     styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
                                 >
                                 </ButtonComponent>
+                            </div>
+                            <div>
+                                <p>Lịch sử tìm kiếm gần đây</p>
+                                {history?.map((htr, index) => {
+                                    return (
+                                        index < 4 && (<>
+                                            <p style={{ marginLeft: '20px', color: '#ccc' }} key={index}>
+                                                {htr.keyword}
+                                            </p>
+                                        </>)
+                                    )
+                                })}
                             </div>
                         </div>
                         <div className='searchMobile'>

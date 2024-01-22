@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { TypeProduct } from '../../component/TypeProduct/TypeProduct'
-import { WrapperButtonMore, WrapperDivNav, WrapperDivTextHover, WrapperProduct, WrapperDiv } from './style'
+import { WrapperContainer, WrapperDivNav, WrapperDivTextHover, WrapperProduct, WrapperDiv, WrapperButtonMore } from './style'
 import { SliderComponent } from '../../component/SliderComponent/SliderComponent'
 import slider1 from '../../assets/images/1.jpeg'
 import slider2 from '../../assets/images/2.jpeg'
@@ -53,6 +53,7 @@ export const HomePage = () => {
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(1); // Bắt đầu từ trang đầu tiên
     const [product2, setProduct2] = useState([]);
+    const [loadProduct, setLoadProduct] = useState(true)
     const elementRef = useRef(null);
 
     function onIntersection(entries) {
@@ -65,11 +66,13 @@ export const HomePage = () => {
     const fetchMoreProduct = async () => {
         const search = '';
         const res = await ProductService.getAllProduct(search, page, limit); // Chuyển trang vào API
-        if (res.totalPage === 1) {
+        if (res.totalPage <= 1) {
             setHasMore(false);
+            setLoadProduct(false);
         } else {
-            setProduct2((prev) => [prev, ...res.data]);
+            setProduct2(res.data);
             setPage((prev) => prev + 1); // Tăng số trang
+
         }
     }
 
@@ -101,10 +104,10 @@ export const HomePage = () => {
     const handleNavigatePageSupport = () => {
         navigate('/support')
     }
-    console.log(product2)
+    console.log('product', product2.map((item) => item._id))
     return (
-        <>
-            <WrapperDiv>
+        <WrapperContainer>
+            <WrapperDiv className='pc'>
                 <WrapperDivNav className='navBar'>
                     <div>
                         <Dropdown overlay={menuTypeProducts} placement="bottom">
@@ -138,9 +141,8 @@ export const HomePage = () => {
 
                         <LoadingComponent isLoading={isLoading}>
                             <WrapperProduct>
-                                {product2 ? (
-                                    product2?.map((product) => (
-
+                                {products?.data ? (
+                                    products?.data?.map((product) => (
                                         <CardComponent
                                             id={product._id}
                                             key={product._id}
@@ -158,6 +160,76 @@ export const HomePage = () => {
                                 ) : (
                                     <p>No products available</p>
                                 )}
+                            </WrapperProduct>
+                            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '15px 0' }}>
+                                {products?.total !== products?.data.length || !products?.totalPage === 1 ? (
+                                    < WrapperButtonMore type={'outline'} textButton={'Xem thêm'} styleButton={{
+                                        border: '1px solid #ccc', color: 'black', width: '240px',
+                                        height: '38px', borderRadius: '4px',
+                                    }}
+                                        styleTextButton={{ fontWeight: '500' }} onClick={handleLoadMore}
+                                    />)
+                                    : (
+                                        <>
+                                        </>
+                                    )
+                                }
+                            </div>
+                        </LoadingComponent>
+                    </div>
+                </div>
+            </WrapperDiv >
+            <WrapperDiv className='mobile'>
+                <WrapperDivNav className='navBar'>
+                    <div>
+                        <Dropdown overlay={menuTypeProducts} placement="bottom">
+                            <WrapperDivTextHover style={{ cursor: 'pointer' }}>
+                                Sản Phẩm
+                            </WrapperDivTextHover>
+                        </Dropdown>
+                    </div>
+                    <div>
+                        <WrapperDivTextHover style={{ color: 'rgb(255,116,109)' }}
+                            onClick={handleNavigatePageSales}>Giảm Giá</WrapperDivTextHover>
+                    </div>
+
+                    <div>
+                        <WrapperDivTextHover onClick={handleNavigatePageSupport}>
+                            Chăm Sóc Khách Hàng
+                        </WrapperDivTextHover>
+                    </div>
+                    <div>
+
+                        <WrapperDivTextHover>Bộ sưu tập</WrapperDivTextHover>
+                    </div>
+                </WrapperDivNav >
+                <div className='body' style={{ width: '100%', backgroundColor: "#fff" }}>
+                    <div id="container" style={{ height: 'fit-content' }}>
+                        <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5, slider6]} />
+                        <div style={{
+                            display: 'flex', justifyContent: 'center',
+                            alignItems: 'center', margin: '20px 0', fontSize: '30px',
+                        }}>Sản Phẩm Mới</div>
+
+                        <LoadingComponent isLoading={isLoading}>
+                            <WrapperProduct>
+                                {
+                                    product2?.map((product) => (
+                                        <CardComponent
+                                            id={product._id}
+                                            key={product._id}
+                                            countInStock={product.countInStock}
+                                            description={product.description}
+                                            image={product.image}
+                                            name={product.name}
+                                            price={product.price}
+                                            rating={product.rating}
+                                            type={product.type}
+                                            discount={product.discount}
+                                            selled={product.selled}
+                                        />
+                                    ))
+                                }
                                 {hasMore && <div ref={elementRef} style={{ width: '100%', height: '80px' }}><Skeleton active /></div>}
                             </WrapperProduct>
                             {/* <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '15px 0' }}>
@@ -179,6 +251,6 @@ export const HomePage = () => {
                 </div>
             </WrapperDiv >
             <Footer />
-        </>
+        </WrapperContainer>
     )
 }

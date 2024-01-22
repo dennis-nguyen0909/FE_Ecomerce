@@ -87,7 +87,7 @@ export const ProductDetailsComponent = ({ idProduct }) => {
             <WrapperDiv>
                 <WrapperRow className='rowPc'>
                     <Col span={10} style={{ borderRight: '1px solid #solid', paddingRight: '8px' }}>
-                        <Image src={productDetail?.image} alt='image-product' preview={false} width={'100%'} height={'500px'} />
+                        <Image src={productDetail?.image} alt='image-product' preview={false} width={'500px'} height={'500px'} />
                     </Col >
                     <Col span={14} style={{ padding: ' 0 40px' }}>
                         <WrapperStyleNameProduct>{productDetail?.name}</WrapperStyleNameProduct>

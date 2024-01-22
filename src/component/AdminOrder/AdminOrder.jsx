@@ -1,4 +1,4 @@
-import { Button, Form, Image, Input, Space, message } from 'antd'
+import { Button, Form, Image, Input, Select, Space, message } from 'antd'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { TableComponent } from '../TableComponent/TableComponent'
 import { InputComponent } from '../InputComponent/InputComponent';
@@ -28,12 +28,15 @@ export const AdminOrder = () => {
     const [isModalOpenDelete, setIsModelOpenDelete] = useState(false)
     const [typeOrder, setTypeOrder] = useState([])
     const user = useSelector((state) => state.user)
-
+    const [statusOrder, setStatusOrder] = useState('')
+    const [statusDelivered, setStatusDelivered] = useState('')
     const [stateOrderDetail, setStateOrderDetail] = useState({
         orderItems: [],
         shippingAddress: {},
         totalPrice: '',
         isDelivered: '',
+        status: '',
+        isDelivered: ''
 
     })
     const [searchText, setSearchText] = useState('');
@@ -175,7 +178,7 @@ export const AdminOrder = () => {
         return res.response
     }
     const query = useQuery({ queryKey: ['order'], queryFn: fetchGetAllOrder })
-    const { data: orders, isLoading } = query
+    const { data: orders, isLoading, refetch } = query
 
     useEffect(() => {
         orders?.data?.map((item) => item?.orderItems?.map((or) => {
@@ -201,6 +204,8 @@ export const AdminOrder = () => {
                     orderItems: data.orderItems,
                     shippingAddress: data.shippingAddress,
                     totalPrice: data.totalPrice,
+                    status: data.status,
+                    isDelivered: data.isDelivered
                 });
             }
         } catch (error) {
@@ -208,6 +213,7 @@ export const AdminOrder = () => {
             // Xử lý lỗi, có thể hiển thị thông báo cho người dùng
         }
     }
+
     const renderAction = () => {
         return (
             <div style={{ cursor: 'pointer', fontSize: '20px', }}>
@@ -261,8 +267,8 @@ export const AdminOrder = () => {
         //     ...getColumnSearchProps('isAdmin'),
         // },
         {
-            title: 'Thanh Toán',
-            dataIndex: 'isPaid',
+            title: 'Trạng thái',
+            dataIndex: 'status',
 
         },
         {
@@ -341,10 +347,28 @@ export const AdminOrder = () => {
         return day === currentDay && month === currentMonth && year === currentYear;
     })
     const handleConfirmOrder = async () => {
-        console.log(rowSelected)
-        const res = await OrderService.confirmOrder(rowSelected);
-        console.log(res)
+        const res = await OrderService.confirmOrder(rowSelected, stateOrderDetail.status, stateOrderDetail.isDelivered);
+        if (res?.status === "OK") {
+            message.success("Đã xác nhận đơn hàng!")
+            setIsOpenDrawer(false)
+            refetch()
+        } else {
+            message.error("Thất bại!");
+        }
     }
+    const handleChange = (value) => {
+        setStateOrderDetail({
+            ...stateOrderDetail,
+            status: value
+        })
+    };
+    const handleChangeDelivered = (value) => {
+        setStateOrderDetail({
+            ...stateOrderDetail,
+            isDelivered: value
+        })
+    }
+    console.log(stateOrderDetail)
     return (
         <div style={{}}>
             <div style={{ margin: '10px 20px' }}>
@@ -406,16 +430,69 @@ export const AdminOrder = () => {
             >
                 {stateOrderDetail?.orderItems.map((item) => {
                     return (
-                        <WrapperDivInfoProduct style={{}}>
-                            <Image width={300} height={300} src={item.image} />
-                            <p>{item.name}</p>
-                            <p>Số lượng :{item.amount}</p>
-                            <p>Size : {item.size}</p>
-                            <p>Người nhận : {stateOrderDetail?.shippingAddress.fullName}</p>
-                            <p>Phone : {stateOrderDetail?.shippingAddress.phone}</p>
-                            <p>Địa chỉ : {stateOrderDetail?.shippingAddress.address + " " + stateOrderDetail?.shippingAddress.city}</p>
-                            <p>Giá tiền : {covertPrice(stateOrderDetail.totalPrice)}</p>
-                        </WrapperDivInfoProduct>
+                        <div>
+                            <WrapperDivInfoProduct style={{}}>
+                                <div>
+                                    <Image width={300} height={300} src={item.image} />
+                                    <p>{item.name}</p>
+                                    <p>Số lượng :{item.amount}</p>
+                                    <p>Size : {item.size}</p>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px' }}>
+                                    <p>Trạng thái :{stateOrderDetail.status}</p>
+                                    <Select
+                                        value={stateOrderDetail?.status}
+                                        style={{
+                                            width: 200,
+                                        }}
+                                        onChange={handleChange}
+                                        options={[
+                                            {
+                                                value: 'Confirmed',
+                                                label: 'Đã xác nhận',
+                                            },
+                                            {
+                                                value: 'Pending',
+                                                label: 'Chờ xác nhận',
+                                            },
+                                            {
+                                                value: 'Delivered',
+                                                label: 'Đang vận chuyển',
+                                            },
+                                        ]}
+                                    />
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px' }}>
+                                    <p>Giao thành công :</p>
+                                    <Select
+
+                                        value={stateOrderDetail.isDelivered + ""}
+                                        style={{
+                                            width: 200,
+                                        }}
+                                        onChange={handleChangeDelivered}
+                                        options={[
+                                            {
+                                                value: 'true',
+                                                label: 'Đã giao thành công',
+                                            },
+                                            {
+                                                value: 'false',
+                                                label: 'Chưa giao thành công',
+                                            },
+
+                                        ]}
+                                    />
+                                </div>
+                                <div>
+                                    <p>Người nhận : {stateOrderDetail?.shippingAddress.fullName}</p>
+                                    <p>Phone : {stateOrderDetail?.shippingAddress.phone}</p>
+                                    <p>Địa chỉ : {stateOrderDetail?.shippingAddress.address + " " + stateOrderDetail?.shippingAddress.city}</p>
+                                    <p>Giá tiền : {covertPrice(stateOrderDetail.totalPrice)}</p>
+                                </div>
+                            </WrapperDivInfoProduct>
+
+                        </div>
                     )
                 })}
                 <ButtonComponent
@@ -429,7 +506,7 @@ export const AdminOrder = () => {
                         borderRadius: "12px",
                         margin: "20px 0"
                     }}
-                    textButton={"Xác nhận"}
+                    textButton={"Cập nhật"}
                     styleTextButton={{ color: "#fff", fontSize: '15px', fontWeight: 700 }}
                 >
                 </ButtonComponent>

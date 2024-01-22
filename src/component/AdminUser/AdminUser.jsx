@@ -486,6 +486,7 @@ export const AdminUser = () => {
             </div>
             <div style={{ border: '1px solid #ccc', margin: '10px 20px', borderRadius: '10px' }}>
                 <TableComponent
+
                     handleDeleteMany={handleDeleteManyUser}
                     columns={columns}
                     data={dataTable}

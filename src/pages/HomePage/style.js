@@ -79,3 +79,23 @@ export const WrapperDivNav = styled.div`
 export const WrapperDiv = styled.div`
 
 `
+
+export const WrapperContainer = styled.div`
+    @media(max-width:767px){
+        .pc{
+            display: none;
+        }
+        .mobile{
+            display:block;
+        }
+    }
+    @media(min-width:767px){
+        .pc{
+            display:block;
+        }
+        .mobile{
+            display:none;
+        }
+    }
+
+`

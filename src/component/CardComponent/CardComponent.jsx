@@ -11,6 +11,7 @@ export const CardComponent = (props) => {
     const handleDetailProduct = (id) => {
         navigate(`/product-detail/${id}`)
     }
+    
     // const formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     return (
         <WrapperCardStyle

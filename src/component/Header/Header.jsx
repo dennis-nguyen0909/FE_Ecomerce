@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Badge, Popover, Button, message, Menu, Dropdown, Switch, } from 'antd'
 import { WrapperHeader, WrapperIcon, WrapperLogoHeader, WrapperLogout, WrapperDiv, WrapperDivMenu, WrapperHeaderMobile, WrapperDivProduct, WrapperSearch } from './style'
-import { UserOutlined, ShoppingCartOutlined, DribbbleOutlined, SearchOutlined, MenuOutlined, AppstoreOutlined, RightOutlined, SettingOutlined, ArrowRightOutlined } from '@ant-design/icons'
+import { UserOutlined, ShoppingCartOutlined, DribbbleOutlined, SearchOutlined, MenuOutlined, AppstoreOutlined, RightOutlined, SettingOutlined, ArrowRightOutlined, AudioOutlined } from '@ant-design/icons'
 import { WrapperAccount } from './style'
+import { AudioRecorder } from 'react-audio-voice-recorder';
 import { ButtonInputSearch } from '../ButtonInputSearch/ButtonInputSearch'
 import * as UserService from '../../services/UserService'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
+import { PlusOutlined, MinusOutlined,AudioMutedOutlined } from '@ant-design/icons'
 import * as ProductService from '../../services/ProductService'
 import { resetUser } from '../../redux/slides/userSlide'
 import { searchProduct } from '../../redux/slides/productSlide'
@@ -23,6 +24,8 @@ import { covertPrice } from '../../untils'
 import { TypeProduct } from '../TypeProduct/TypeProduct'
 // import slider4 from '../../assets/images/slider4.jpg'
 import * as SearchService from '../../services/SearchService'
+import axios from 'axios'
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const location = useLocation()
     const order = useSelector((state) => state.order)
@@ -35,6 +38,70 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const [current, setCurrent] = useState('1');
     const [theme, setTheme] = useState('light');
     const [history, setHistory] = useState([])
+    const [searchVoice,setSearchVoice]=useState("")
+    const{transcript,resetTranscript}=useSpeechRecognition({
+        lang:'vi-VN'
+    });
+    const synth=window.speechSynthesis;
+    const speak =(text)=>{
+        if(synth.speaking){
+            console.log("bussy")
+            return 
+        }
+        const utter = new SpeechSynthesisUtterance(text)
+        utter.onend=()=>{
+            console.log("Speeack")
+        }
+        utter.onerror=err=>{
+            console.log(err)
+        }
+        synth.speak(utter)
+    }
+    const [isListening, setIsListening] = useState(false);
+
+    const startListening = () => {
+        setIsListening(true);
+        SpeechRecognition.startListening();
+    };
+
+    const stopListening = () => {
+        setIsListening(false);
+        SpeechRecognition.stopListening();
+    };
+
+    useEffect(()=>{
+        if(transcript){
+            setTimeout(()=>{
+                setSearchVoice(transcript)
+            },[1000])
+        }
+    },[transcript])
+
+    useEffect(()=>{
+        const word="danh sách"
+        if(searchVoice.startsWith(word)){
+            let result ="";
+            result = searchVoice.substring(word.length).trim();
+            result=result.charAt(0,1).toUpperCase()+result.slice(1)
+            navigate(`/product/${result}`, { state: result })
+            stopListening()
+            resetTranscript()
+        }else if(searchVoice){
+            dispatch(searchProduct(searchVoice))
+            navigate('/search-product')
+            fetchSearch(searchVoice)
+            setOpenSearch(false)
+            setSearch('');
+            setTimeout(()=>{
+                stopListening()
+            },[500])
+            resetTranscript()        
+        }
+    },[searchVoice])
+    const handleSearch=()=>{
+        setSearchVoice(transcript)
+        resetTranscript()
+    }
     const changeTheme = (value) => {
         setTheme(value ? 'dark' : 'light');
     };
@@ -218,6 +285,24 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     useEffect(() => {
         getAllSearch();
     }, [search])
+    const [blod, setBold] = useState([])
+    const addAudioElement = async (blob) => {
+        const formData = new FormData();
+        formData.append("audio", blob);
+        try {
+            const res = await axios.post("http://localhost:8080/upload", formData);
+            console.log(res.data);
+        } catch (error) {
+            console.error('Error uploading recording:', error);
+        }
+
+        const url = URL.createObjectURL(blob);
+        const audio = document.createElement("audio");
+        audio.src = url;
+        audio.controls = true;
+        document.body.appendChild(audio);
+    };
+
     return (
         <WrapperDiv>
             <div style={{ backgroundColor: 'black', height: '30px', display: 'flex', alignItems: 'center', paddingLeft: '40px' }}>
@@ -325,10 +410,21 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                     placeholder="Tìm kiếm sản phẩm ...."
                                     textButton="Tìm kiếm"
                                     size="large"
-                                    value={search}
+                                    value={transcript? transcript: search}
                                     onChange={onSearch}
 
                                 />
+                         {isListening ? (
+                                <AudioOutlined
+                                    onClick={stopListening}
+                                    style={{ position: 'absolute', right: '400px', fontSize: '18px', cursor: 'pointer' }}
+                                />
+                            ) : (
+                                <AudioMutedOutlined
+                                    onClick={startListening}
+                                    style={{ position: 'absolute', right: '400px', fontSize: '18px', cursor: 'pointer' }}
+                                />
+                            )}
                                 <ButtonComponent
                                     onClick={onClickSearch}
                                     size={'40'}
@@ -367,6 +463,7 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                     value={search}
                                     onChange={onSearch}
                                 />
+                                {/* <AudioOutlined /> */}
                                 <ButtonComponent
                                     onClick={onClickSearch}
                                     size={'40'}

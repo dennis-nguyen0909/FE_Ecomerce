@@ -59,6 +59,7 @@ export const LogInPage = () => {
 
         }
     }, [isSuccess])
+
     const handleGetDetailUser = async (id, access_token) => {
         const storage = localStorage.getItem('refresh_token');
         const refreshToken = JSON.parse(storage)

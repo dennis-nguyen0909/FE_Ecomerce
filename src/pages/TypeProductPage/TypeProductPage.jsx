@@ -23,7 +23,7 @@ export const TypeProductPage = () => {
     const [panigate, setPanigate] = useState({
         pageCurrent: 0,
         page: 0,
-        limit: 4,
+        limit: 9,
         total: 0
     })
     const location = useLocation()
@@ -39,6 +39,7 @@ export const TypeProductPage = () => {
             total: res?.totalPage
         })
     }
+    console.log(panigate)
     useEffect(() => {
         if (location.state) {
             fetchProductType(location.state, panigate.page, panigate.limit)
@@ -66,7 +67,7 @@ export const TypeProductPage = () => {
         setPanigate({
             pageCurrent: panigate?.total,
             page: 0,
-            limit: 4,
+            limit: 9,
             total: panigate?.total
         })
     }
@@ -74,7 +75,7 @@ export const TypeProductPage = () => {
         setPanigate({
             pageCurrent: 0,
             page: 0,
-            limit: 9,
+            limit: panigate.limit+6,
             total: panigate?.total
         })
     }
@@ -102,33 +103,34 @@ export const TypeProductPage = () => {
         const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
         const windowHeight = window.innerHeight || document.documentElement.clientHeight;
         const documentHeight = document.documentElement.scrollHeight;
-        // Kiểm tra xem người dùng đã cuộn xuống cuối chưa
+        
+        // Kiểm tra xem người dùng đã cuộn xuống cuối chưa và có đủ điều kiện để tải thêm sản phẩm không
         if (scrollY + windowHeight >= documentHeight - 700 && !spin && panigate.page < panigate.total) {
-
             // Tải thêm sản phẩm với giới hạn tăng lên
             const newLimit = panigate.limit + 4;
-            setSpin(true)
+            setSpin(true);
+            
             fetchProductType(location.state, panigate.page, newLimit).then(() => {
-                setSpin(false)
+                setSpin(false);
             });
-
         }
     };
-    const handleScrollDebounce = useDebounce(handleScroll, 2000);
-    useEffect(() => {
-        // Gắn trình nghe sự kiện cuộn khi thành phần được tạo
-        window.addEventListener('scroll', handleScroll);
+    
+    
+    // const handleScrollDebounce = useDebounce(handleScroll, 2000);
+    // useEffect(() => {
+    //     // Gắn trình nghe sự kiện cuộn khi thành phần được tạo
+    //     window.addEventListener('scroll', handleScroll);
 
-        // Loại bỏ trình nghe sự kiện khi thành phần bị hủy
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [location.state, panigate.page, panigate.limit]);
+    //     // Loại bỏ trình nghe sự kiện khi thành phần bị hủy
+    //     return () => {
+    //         window.removeEventListener('scroll', handleScroll);
+    //     };
+    // }, [location.state, panigate.page, panigate.limit]);
     const handleOnChangePrice = (e) => {
         const selectedValue = e.target.value
         setFilterPrice(selectedValue === filterPrice ? '' : selectedValue)
     }
-    console.log(filterPrice)
     const sortedProduct300to500 = originalData.filter((item) => item.price >= 300000 && item.price <= 500000)
     const sortedProduct500to1000 = originalData.filter((item) => item.price >= 500000 && item.price <= 1000000)
     const sortedProduct1000 = originalData.filter((item) => item.price >= 1000000)
@@ -184,7 +186,7 @@ export const TypeProductPage = () => {
                 <p style={{ color: 'rgb(231,231,231)' }}>Home</p>
                 <p>/ {location.state}</p>
             </div>
-            <WrapperContainer >
+            <WrapperContainer style={{marginBottom:"100px"}} >
                 <LoadingComponent isLoading={loading} >
                     <WrapperRow className='productPc'>
                         <WrapperNavbar className='navBarLeft' span={5}>
@@ -227,9 +229,15 @@ export const TypeProductPage = () => {
                                     productsToRender.map((product) => renderProductCard(product))
                                 }
                             </WrapperProduct>
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
                                 <Spin spinning={spin} />
-                            </div>
+                            </div> */}
+                            {panigate.total===1 ? <></> :
+                                 <div style={{display:'flex',alignItems:'center',justifyContent:'center',padding:'10px 0'}}>
+                                <Button onClick={handleReadMore}>Xem thêm</Button>
+                                </div>
+                        
+                            }
                         </div>
 
                     </WrapperRow>

@@ -130,7 +130,10 @@ export const SalesProduct = () => {
                                             cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
                                         >
                                             <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
-                                            <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>Giảm giá{product?.discount}</p>
+                                            <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'10px'}}>
+                                                <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>Giảm giá :</p>
+                                                <span style={{color:'red'}}>{product?.discount}%</span>
+                                            </div>
                                             <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                                 {covertPrice(product.price)}
                                             </span>
@@ -146,7 +149,10 @@ export const SalesProduct = () => {
                                             cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
                                         >
                                             <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
-                                            <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>Giảm giá{product?.discount}</p>
+                                            <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'10px'}}>
+                                                <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>Giảm giá :</p>
+                                                <span style={{color:'red'}}>{product?.discount}%</span>
+                                            </div>
                                             <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                                 {covertPrice(product.price)}
                                             </span>
@@ -162,7 +168,10 @@ export const SalesProduct = () => {
                                             cover={<img style={{ width: '100%', height: 'auto' }} alt="example" src={product?.image} />}
                                         >
                                             <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>{product?.name}</p>
-                                            <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>Giảm giá{product?.discount}</p>
+                                            <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'10px'}}>
+                                                <p style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>Giảm giá :</p>
+                                                <span style={{color:'red'}}>{product?.discount}%</span>
+                                            </div>
 
                                             <span style={{ fontSize: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                                 {covertPrice(product.price)}

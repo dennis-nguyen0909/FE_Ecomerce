@@ -10,12 +10,13 @@ import slider5 from '../../assets/images/5.jpeg'
 import slider6 from '../../assets/images/6.jpeg'
 import { CardComponent } from '../../component/CardComponent/CardComponent'
 import * as ProductService from '../../services/ProductService'
+import * as UserService from '../../services/UserService'
 import { useQueries, useQuery } from '@tanstack/react-query'
 import { useSelector } from 'react-redux'
 import { useDebounce } from '../../hooks/useDebounce'
 import LoadingComponent from '../../component/LoadingComponent/LoadingComponent'
-import { DownOutlined, SmileOutlined } from '@ant-design/icons';
-import { Dropdown, Menu, Skeleton, Space } from 'antd';
+import { DownOutlined, SmileOutlined, MessageOutlined ,RobotOutlined ,UserOutlined} from '@ant-design/icons';
+import { Button, Dropdown, Input, Menu, Popover, Skeleton, Space, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom'
 import { Footer } from '../../component/Footer/Footer'
 
@@ -25,7 +26,7 @@ export const HomePage = () => {
     const searchDebounce = useDebounce(searchProduct, 1000)
     const [limit, setLimit] = useState(9)
     const [typeProduct, setTypeProduct] = useState([])
-
+    const user = useSelector((state) => state.user)
 
     const menuTypeProducts = (
         <Menu style={{ zIndex: 10000 }} >
@@ -105,6 +106,108 @@ export const HomePage = () => {
         navigate('/support')
     }
     console.log('product', product2.map((item) => item._id))
+    const [open, setOpen] = useState(false);
+    const hide = () => {
+        setOpen(false);
+    };
+    const handleOpenChange = (newOpen) => {
+        setOpen(newOpen);
+    };
+    const [message, setMessage] = useState("")
+    const[messageChat,setMessageChat]=useState([])
+    const [responseGPT, setResponseGPT] = useState("")
+    const [loading, setLoading] = useState(false)
+    const handleCallAPIChat = async () => {
+        if (message.trim() === '') return;
+        setMessageChat(message);
+        setLoading(true);
+        try {
+            const res = await UserService.handleCallChatGPT(message);
+            if(res?.response?.message){
+                setResponseGPT(res?.response?.message);
+                setMessage("");
+            }else{
+                setResponseGPT("Xin lỗi mình không biết trả lời câu hỏi này.Bạn hãy thử hỏi câu khác nhé!")
+                setMessage("")
+            }
+        } catch (error) {
+            console.error("Error calling API:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+    const synth=window.speechSynthesis;
+    console.log("resGPT",responseGPT)
+    const speak =(text)=>{
+        if(synth.speaking){
+            console.log("bussy")
+            return 
+        }
+        const utter = new SpeechSynthesisUtterance(text)
+        utter.onend=()=>{
+            console.log("Speeack")
+        }
+        utter.onerror=err=>{
+            console.log(err)
+        }
+        synth.speak(utter)
+    }
+    const handleOnChangeMessage=(e)=>{
+        setMessage(e.target.value)
+    }
+    const contentChatGPT = () => {
+        return (
+            <div style={{ width: '500px', height: '500px', position: 'relative' }}>
+                <div style={{ overflow: 'auto', height: '500px' }}>
+                    {/* <div>{speak(responseGPT)}</div> */}
+                    {!loading ? (
+                        responseGPT?.length>0 ?
+                        <div style={{display:'flex',alignItems:'center',gap:"10px"}}>
+                            <RobotOutlined />
+                            <p style={{ color: 'red' ,backgroundColor:"#ccc",borderRadius:'30',borderRadius:'20px',padding:"10px 20px",textAlign:'center'}}> 
+                            {responseGPT}</p> 
+                        </div>
+                        :<div style={{display:'flex',alignItems:'center',gap:"10px"}}>
+                            <RobotOutlined />
+                            <p style={{ color: 'red' ,backgroundColor:"#ccc",borderRadius:'30',borderRadius:'20px',padding:"10px 20px",textAlign:'center'}}> 
+                            Bạn có câu hỏi gì không ?</p> 
+                        </div>
+
+
+                        //  <div style={{display:'flex',width:'100%',alignItems:'center',gap:10}}>
+                        //     {responseGPT>0 ? (
+                        //         <>
+                        //         <RobotOutlined />
+                        //         <p style={{ color: 'red' ,backgroundColor:"#ccc",borderRadius:'30',borderRadius:'20px',padding:"10px 20px",textAlign:'center'}}> {responseGPT}</p> 
+                        //         </>
+
+                        //     ) :(
+                        //         <>
+                        //         <RobotOutlined />
+                        //         <p style={{ color: 'red' ,backgroundColor:"#ccc",borderRadius:'30',borderRadius:'20px',padding:"10px 20px",textAlign:'center'}}>Bạn cần hổ trợ ?</p> 
+                        //         </>
+
+                        //     )}
+                        // </div>
+                        )
+                        : <span><Spin /></span>}
+                        <div>
+                            {messageChat?.length>0 &&
+                            (
+                                <div style={{display:'flex',flexDirection:'row',justifyContent:'flex-end',alignItems:'center',gap:20,width:"100%" }}>
+                                <span style={{backgroundColor:"rgb(18,152,247) " ,padding:"10px 15px",borderRadius:'20px'}} >{messageChat}</span>
+                                <UserOutlined />
+                            </div>
+                            )}
+                        </div>
+                </div>
+                <div style={{ position: 'absolute', bottom: 0, width: '100%', display: 'flex', gap: '20px', marginTop: '80px' }}>
+                    <Input value={message} onChange={(e) => handleOnChangeMessage(e)} />
+                    <Button onClick={handleCallAPIChat}>Send</Button>
+                </div>
+            </div>
+        )
+    }
     return (
         <WrapperContainer>
             <WrapperDiv className='pc'>
@@ -127,18 +230,31 @@ export const HomePage = () => {
                         </WrapperDivTextHover>
                     </div>
                     <div>
-
                         <WrapperDivTextHover>Bộ sưu tập</WrapperDivTextHover>
                     </div>
                 </WrapperDivNav >
+
                 <div className='body' style={{ width: '100%', backgroundColor: "#fff" }}>
                     <div id="container" style={{ height: 'fit-content' }}>
-                        <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5, slider6]} />
+                        <div style={{ position: 'relative' }} >
+                            <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5, slider6]} />
+                            <Popover
+                                content={contentChatGPT}
+                                title="Trợ lý ảo"
+                                trigger="click"
+                                open={open}
+                                onOpenChange={handleOpenChange}>
+
+                                <div
+                                    style={{ position: 'fixed', width: '50px', height: '50px', borderRadius: '50%', bottom: '80px', right: '20px', zIndex: '9999', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #ccc', cursor: 'pointer', backgroundColor: '#fff' }}>
+                                    <MessageOutlined style={{ fontSize: '30px' }} />
+                                </div>
+                            </Popover>
+                        </div>
                         <div style={{
                             display: 'flex', justifyContent: 'center',
                             alignItems: 'center', margin: '20px 0', fontSize: '30px',
                         }}>Sản Phẩm Mới</div>
-
                         <LoadingComponent isLoading={isLoading}>
                             <WrapperProduct>
                                 {products?.data ? (

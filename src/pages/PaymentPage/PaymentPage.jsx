@@ -140,10 +140,10 @@ export const PaymentPage = () => {
             message.error('Vui lòng chọn phương thức thanh toán!');
         } else if (!payment) {
             message.error('Vui lòng chọn phương vận chuyển !');
-        } else if (!user?.name || !user?.address || !user?.phone || !user?.city) {
+        } else if (!user?.name || !user?.address || !user?.phone ) {
             message.error("Vui lòng điền đẩy đủ thông tin giao hàng")
         }
-        else if (user?.name || user?.address || user?.phone || user?.city) {
+        else if (user?.name || user?.address || user?.phone) {
             isLoadingAdd(true)
             const result = await addOrder({
                 token: user?.access_token,

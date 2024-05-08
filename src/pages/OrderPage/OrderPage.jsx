@@ -43,13 +43,13 @@ export const OrderPage = () => {
     })
     const order = useSelector((state) => state.order)
     const dispatch = useDispatch();
-    const fetch = async () => {
-        const res = await axios.get(`https://provinces.open-api.vn/api/?depth=3`);
-        setCityData(res.data)
-    }
-    useEffect(() => {
-        fetch();
-    }, [])
+    // const fetch = async () => {
+    //     const res = await axios.get(`https://provinces.open-api.vn/api/?depth=3`);
+    //     setCityData(res.data)
+    // }
+    // useEffect(() => {
+    //     fetch();
+    // }, [])
     const handleCityChange = (value) => {
         const selectedCityData = cityData.find((city) => city.code === value);
         setSelectedCity(selectedCityData);
@@ -157,8 +157,8 @@ export const OrderPage = () => {
     const handlePayment = async () => {
         if (!order?.orderItemsSelected?.length) {
             message.error("Vui lòng chọn sản phẩm ?")
-        } else if (!user?.districts || !user?.ward || !user?.name || !user?.phone || !user?.address) {
-            setIsModalOpen(true)
+        // } else if (!user?.districts || !user?.ward || !user?.name || !user?.phone || !user?.address) {
+        //     setIsModalOpen(true)
         } else {
             navigate('/payment')
 

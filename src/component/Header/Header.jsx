@@ -79,6 +79,7 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
 
     useEffect(()=>{
         const word="danh sách"
+        const word2="vào trang"
         if(searchVoice.startsWith(word)){
             let result ="";
             result = searchVoice.substring(word.length).trim();
@@ -86,7 +87,15 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             navigate(`/product/${result}`, { state: result })
             stopListening()
             resetTranscript()
-        }else if(searchVoice){
+        }else if(searchVoice.startsWith(word2)){
+            let result ="";
+            result = searchVoice.substring(word.length).trim();
+            result=result.charAt(0,1).toUpperCase()+result.slice(1)
+            navigate(`/product-sale`)
+            stopListening()
+            resetTranscript()
+        }
+        else if(searchVoice){
             dispatch(searchProduct(searchVoice))
             navigate('/search-product')
             fetchSearch(searchVoice)

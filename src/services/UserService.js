@@ -118,7 +118,6 @@ export const deleteManyProduct = async (ids, access_token) => {
 };
 
 export const handleCallChatGPT = async (message) => {
-  console.log(message);
   const res = await axiosJWT.post(`${process.env.REACT_APP_API}user/chat-gpt`, {
     message,
   });

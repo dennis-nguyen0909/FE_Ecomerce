@@ -118,11 +118,13 @@ export const HomePage = () => {
     const [responseGPT, setResponseGPT] = useState("")
     const [loading, setLoading] = useState(false)
     const handleCallAPIChat = async () => {
-        if (message.trim() === '') return;
+        console.log("mess",message)
+        // if (message.trim() === '') return;
         setMessageChat(message);
         setLoading(true);
         try {
             const res = await UserService.handleCallChatGPT(message);
+            console.log("res",res)
             if(res?.response?.message){
                 setResponseGPT(res?.response?.message);
                 setMessage("");
@@ -137,7 +139,6 @@ export const HomePage = () => {
         }
     }
     const synth=window.speechSynthesis;
-    console.log("resGPT",responseGPT)
     const speak =(text)=>{
         if(synth.speaking){
             console.log("bussy")

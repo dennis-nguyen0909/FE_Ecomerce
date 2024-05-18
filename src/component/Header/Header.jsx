@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { PlusOutlined, MinusOutlined,AudioMutedOutlined } from '@ant-design/icons'
 import * as ProductService from '../../services/ProductService'
+import * as ShopService  from '../../services/SearchService'
 import { resetUser } from '../../redux/slides/userSlide'
 import { searchProduct } from '../../redux/slides/productSlide'
 import LoadingComponent from '../LoadingComponent/LoadingComponent'
@@ -42,6 +43,16 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const{transcript,resetTranscript}=useSpeechRecognition({
         lang:'vi-VN'
     });
+    const[shops,setShops]=useState([])
+    const fetchShop = async()=>{
+        const res = await ShopService.getAllShop();
+        console.log(res)
+        setShops(res.response.data)
+    }
+    useEffect(()=>{
+        fetchShop()
+    },[])
+
     const synth=window.speechSynthesis;
     const speak =(text)=>{
         if(synth.speaking){
@@ -311,7 +322,6 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         audio.controls = true;
         document.body.appendChild(audio);
     };
-
     return (
         <WrapperDiv>
             <div style={{ backgroundColor: 'black', height: '30px', display: 'flex', alignItems: 'center', paddingLeft: '40px' }}>
@@ -320,7 +330,7 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             <WrapperHeader className='header'>
                 <Col style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => navigate('/')} span={10}>
                     <WrapperLogoHeader className='logo-header'>
-                        Sneaker Asia
+                        {shops && shops[0] && shops[0]?.name ?shops[0]?.name :"Sneaker Asia"}
                     </WrapperLogoHeader>
                 </Col>
                 <Col className='nav' span={5} style={{ position: 'absolute', right: '50px', display: 'flex', gap: '54px', alignItems: 'center' }}>

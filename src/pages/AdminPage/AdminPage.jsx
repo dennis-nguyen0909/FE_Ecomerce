@@ -7,6 +7,7 @@ import { AdminUser } from '../../component/AdminUser/AdminUser';
 import { AdminProduct } from '../../component/AdminProduct/AdminProduct';
 import { AdminOrder } from '../../component/AdminOrder/AdminOrder';
 import { WrapperDivContainer } from './style';
+import AdminShop from '../../component/AdminShop/AdminShop';
 export const AdminPage = () => {
     const [keySelected, setKeySelected] = useState('');
     const items = [
@@ -17,7 +18,7 @@ export const AdminPage = () => {
             type: 'divider',
         },
         getItem('Cài đặt', 'sub4', <SettingOutlined />, [
-            getItem('Option 9', '9'),
+            getItem('Quản lý shop', 'shop'),
             getItem('Option 10', '10'),
             getItem('Option 11', '11'),
             getItem('Option 12', '12'),
@@ -40,6 +41,10 @@ export const AdminPage = () => {
                 return (
                     <AdminOrder />
                 )
+            case 'shop':
+                    return(
+                        <AdminShop/>
+                    )
             default:
                 return <></>
         }

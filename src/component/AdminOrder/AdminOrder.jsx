@@ -1,4 +1,4 @@
-import { Button, Form, Image, Input, Select, Space, message } from 'antd'
+import { Button, Checkbox, Form, Image, Input, Select, Space, message } from 'antd'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { TableComponent } from '../TableComponent/TableComponent'
 import { InputComponent } from '../InputComponent/InputComponent';
@@ -217,10 +217,27 @@ export const AdminOrder = () => {
     const renderAction = () => {
         return (
             <div style={{ cursor: 'pointer', fontSize: '20px', }}>
-                <DeleteOutlined style={{ color: 'red' }} />
+                <DeleteOutlined style={{ color: 'red' }} onClick={handleOpenModalDelete} />
                 <EditOutlined style={{ color: 'orange' }} onClick={handleEditOrder} />
             </div>
         )
+    }
+    console.log("selected",rowSelected)
+    const handleOpenModalDelete =async ()=>{
+        if (rowSelected) {
+            setIsModelOpenDelete(true)
+        }
+    }
+    const handleDeleteOrder =async (id)=>{
+        const res = await OrderService.cancelOrderProduct(id,user.access_token,stateOrderDetail.orderItems);
+        console.log("res",res)
+        if(+res?.EC===1){
+            setIsModelOpenDelete(false)
+            message.success("Hủy thành công")
+            queryClient.invalidateQueries('orders');
+        }else{
+            message.error("Hủy thất bại")
+        }
     }
     const deleteManyOrder = useMutationHook(
         async (data) => {
@@ -369,6 +386,30 @@ export const AdminOrder = () => {
         })
     }
     console.log(stateOrderDetail)
+    const [selectedMonth, setSelectedMonth] = useState('1');
+    const [year,setYear]=useState('')
+
+    const handleMonthChange = async(value) => {
+        setSelectedMonth(value);
+        console.log("value",value)
+    };
+    const onChangeYear = (e)=>{
+        setYear(e.target.value)
+    }
+    const [orderFilter,setOrderFilter]=useState([])
+    const [openModalFilter,setOpenModalFilter]=useState(false)
+        const handleFilter = async()=>{
+        const res = await OrderService.getByMonth(user?.access_token,selectedMonth,year);
+        if(res?.data){
+            setOrderFilter(res.data)
+            setOpenModalFilter(true)
+        }
+    }
+    const [isChecked, setIsChecked] = useState(false);
+
+    const handleCheckboxChange = (e) => {
+        setIsChecked(e.target.checked);
+    };
     return (
         <div style={{}}>
             <div style={{ margin: '10px 20px' }}>
@@ -392,9 +433,40 @@ export const AdminOrder = () => {
                     }}
                 />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center',flexDirection:"column" }}>
                 <h1 style={{ margin: '20px 0' }}>Thống kê đơn đặt hàng</h1>
             </div>
+                <div style={{display:'flex',justifyContent:'flex-start',marginLeft:"156px",marginBottom:"20px",gap:"10px"}}>
+                <Checkbox
+                    checked={isChecked}
+                    onChange={handleCheckboxChange}
+                >
+                </Checkbox>
+                <Select
+                disabled={isChecked?false:true}
+                    defaultValue="1"
+                    style={{
+                        width: 120,
+                    }}
+                    options={[
+                        { value: '1', label: 'Tháng 1' },
+                        { value: '2', label: 'Tháng 2' },
+                        { value: '3', label: 'Tháng 3' },
+                        { value: '4', label: 'Tháng 4' },
+                        { value: '5', label: 'Tháng 5' },
+                        { value: '6', label: 'Tháng 6' },
+                        { value: '7', label: 'Tháng 7' },
+                        { value: '8', label: 'Tháng 8' },
+                        { value: '9', label: 'Tháng 9' },
+                        { value: '10', label: 'Tháng 10' },
+                        { value: '11', label: 'Tháng 11' },
+                        { value: '12', label: 'Tháng 12' },
+                    ]}
+                    onChange={(value) => handleMonthChange(value)}
+                />
+                <Input type='text' placeholder='Nhập năm' onChange={onChangeYear} style={{width:"100px"}}/>
+                <Button onClick={handleFilter}>Lọc</Button>
+                </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <PieChartsComponent orders={orders?.data} />
             </div>
@@ -511,8 +583,40 @@ export const AdminOrder = () => {
                 >
                 </ButtonComponent>
             </DrawerComponent>
-            <ModelComponent title="Xóa Người Dùng" open={isModalOpenDelete} onCancel={() => alert('')} footer={null}>
-
+            <ModelComponent title="Hủy Đơn Hàng" open={isModalOpenDelete} onCancel={()=>setIsModelOpenDelete(false)} footer={null}>
+                    <div>
+                        <h1>Bạn có chắc hủy đơn hàng này không ? {rowSelected}</h1>
+                        <div style={{display:'flex',justifyContent:'end',marginTop:"10px"}}>
+                            <Button onClick={()=>handleDeleteOrder(rowSelected)}>Hủy</Button>
+                        </div>
+                    </div>
+            </ModelComponent>
+            <ModelComponent title='Các đơn hàng' open={openModalFilter} onCancel={()=>setOpenModalFilter(false)}>
+                    <h2>Tổng đơn hàng : {orderFilter.length}</h2>
+                    <div>
+                        {orderFilter.map((order,index)=>{
+                            return (
+                                <>
+                                <h2>Thông tin người đặt hàng</h2>
+                                <div>{order._id}</div>
+                                <div>{order.shippingAddress.fullName}</div>
+                                <div>{order.shippingAddress.address}</div>
+                                <h2>Sản phẩm</h2>
+                                <div>{order.orderItems.map((item)=>{
+                                    return (
+                                        <>
+                                        <div>
+                                            {item.name}
+                                            </div>
+                                            <Image width={100}height={100}  src={item.image} />
+                                            <div>Số lượng : {item.amount}</div>
+                                        </>
+                                    )
+                                })}</div>
+                                </>
+                            )
+                        })}
+                    </div>
             </ModelComponent>
         </div >
 

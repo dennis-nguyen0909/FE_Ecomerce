@@ -31,6 +31,7 @@ export const AdminUser = () => {
         email: '',
         password: '',
         isAdmin: false,
+        isEmployee:false,
         phone: '',
         avatar: '',
         address: '',
@@ -41,6 +42,7 @@ export const AdminUser = () => {
         email: '',
         password: '',
         isAdmin: false,
+        isEmployee: false,
         phone: '',
         avatar: '',
         address: '',
@@ -412,6 +414,7 @@ export const AdminUser = () => {
                 email: res?.response?.data?.email,
                 password: res?.response?.data?.password,
                 isAdmin: res?.response?.data?.isAdmin,
+                isEmployee:res?.response?.data?.isEmployee,
                 phone: res?.response?.data?.phone,
                 avatar: res?.response?.data?.avatar,
                 address: res?.response?.data?.address,
@@ -437,9 +440,10 @@ export const AdminUser = () => {
         })
 
     }
-    const onUpdateProduct = async () => {
+    const onUpdateUser = async () => {
         setIsLoadingUpdate(true)
         const res = await UserService.updateUser(rowSelected, stateUserDetail, user?.access_token);
+        console.log("res",res)
         formModal.setFieldsValue(res.updateNewProduct)
         if (res?.data?.status === "Ok") {
             message.success('Cập nhật thành công')
@@ -476,6 +480,7 @@ export const AdminUser = () => {
         handleCancelDelete();
     }
 
+    console.log("state",stateUserDetail)
     return (
         <div style={{}}>
             <div style={{ margin: '10px 20px' }}>
@@ -640,7 +645,7 @@ export const AdminUser = () => {
                         wrapperCol={{
                             span: 18,
                         }}
-                        onFinish={onUpdateProduct}
+                        onFinish={onUpdateUser}
                         onFinishFailed={onFinishFailed}
                         autoComplete="on"
                     >
@@ -663,7 +668,7 @@ export const AdminUser = () => {
                             {/* <InputComponent value={stateUserDetail.name} onChange={handleOnChangeUserDetail} name="name" /> */}
 
                         </Form.Item>
-                        <Form.Item
+                        {/* <Form.Item
                             label="Email"
                             name="email"
                             rules={[
@@ -674,19 +679,22 @@ export const AdminUser = () => {
                             ]}
                         >
                             <InputComponent value={stateUserDetail.email} onChange={handleOnChangeUserDetail} name="email" />
-                        </Form.Item>
+                        </Form.Item> */}
                         <Form.Item
                             label="Admin"
-                            name="admin"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your admin!',
-                                },
-                            ]}
+                            name="isAdmin"
+                           
                         >
 
-                            <InputComponent value={stateUserDetail.isAdmin} onChange={handleOnChangeUserDetail} name="admin" />
+                            <InputComponent value={stateUserDetail.isAdmin} onChange={handleOnChangeUserDetail} name="isAdmin" />
+                        </Form.Item>
+                        <Form.Item
+                            label="Employee"
+                            name="isEmployee"
+                            
+                        >
+
+                            <InputComponent value={stateUserDetail.isEmployee===true?"true":"false"} onChange={handleOnChangeUserDetail} name="isEmployee" />
                         </Form.Item>
                         <Form.Item
                             label="Phone"

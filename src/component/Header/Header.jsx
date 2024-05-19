@@ -187,13 +187,14 @@ export const Header = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     const handleNavigateMyOrder = () => {
         navigate('/my-order')
     }
+    console.log("user",user)
     const content = (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
             <WrapperLogout onClick={handleLogout}>Đăng xuất</WrapperLogout>
             <WrapperLogout onClick={handleNavigateProfile}>Thông tin người dùng</WrapperLogout>
             <WrapperLogout onClick={handleNavigateMyOrder}>Đơn hàng của tôi</WrapperLogout>
 
-            {user?.isAdmin && (
+            {(user?.isAdmin || user?.isEmployee) && (
                 <WrapperLogout onClick={handleNavigateAdmin}>Quản lý hệ thống</WrapperLogout>
             )}
         </div>

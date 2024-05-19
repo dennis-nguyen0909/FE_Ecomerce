@@ -63,7 +63,8 @@ export const LogInPage = () => {
     const handleGetDetailUser = async (id, access_token) => {
         const storage = localStorage.getItem('refresh_token');
         const refreshToken = JSON.parse(storage)
-        const res = await UserService.getDetailUser(id, access_token); // lấy thông tin user từ token và id
+        const res = await UserService.getDetailUser(id, access_token); 
+        console.log("res,",res)// lấy thông tin user từ token và id
         dispatch(updateUser({ ...res?.response.data, access_token: access_token, refreshToken }))
         // truyền data mà res trả về vào redux
         // thì bên userSlide sẽ nhận được state và action trong đó action.payload là data user

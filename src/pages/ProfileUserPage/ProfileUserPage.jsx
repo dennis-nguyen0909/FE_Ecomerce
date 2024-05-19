@@ -48,6 +48,7 @@ export const ProfileUserPage = () => {
     const mutation = useMutationHook(
         (data) => {
             const { id, access_token, ...rests } = data
+            console.log("data",data)
             UserService.updateUser(id, rests, access_token)
         }
     )

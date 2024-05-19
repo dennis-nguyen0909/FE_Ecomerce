@@ -75,6 +75,12 @@ export const getByMonth = async (access_token, month, year) => {
   );
   return res.data;
 };
+export const getRevenueByMonth = async () => {
+  const res = await axiosJWT.get(
+    `${process.env.REACT_APP_API}order/get-revenue-by-month`
+  );
+  return res.data;
+};
 
 export const deleteManyOrder = async (ids, access_token) => {
   const res = await axiosJWT.post(

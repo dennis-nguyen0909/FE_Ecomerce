@@ -211,6 +211,7 @@ export const OrderPage = () => {
             city: res?.response?.data?.city,
         })
     }
+    console.log(user)
 
     const itemsDelivery =
         [
@@ -273,7 +274,7 @@ export const OrderPage = () => {
                                 name="address"
                                 // value={allAddress ? allAddress : user?.address}
                                 value={user?.address + " " + user?.ward + " " + user?.districts + " " + user?.city}
-
+                                
                             />
 
                             {/* <LoadingComponent > */}

@@ -50,9 +50,10 @@ export const ProductDetailsComponent = ({ idProduct }) => {
         } else {
             if (productDetail?.countInStock <= 0 || numProduct > productDetail?.countInStock) {
                 message.error("Sản phẩm này đã hết vui lòng chọn sản phẩm khác !")
-            } else if (!selectedSize) {
-                message.error("Vui lòng chọn size !")
-            }
+            } 
+            // else if (!selectedSize) {
+            //     message.error("Vui lòng chọn size !")
+            // }
             else {
                 if (numProduct > 0 && productDetail) {
                     dispatch(addOrderProduct({
